@@ -38,7 +38,7 @@ After=display-manager.service network.target syslog.target
 exit
 [Service]
 Type=simple
-ExecStart=/usr/bin/x11vnc -forever -display :0 -auth /home/${USER}/.Xauthority -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared
+ExecStart=/usr/bin/x11vnc -auth /var/run/sddm/* -display :0 -forever -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared
 ExecStop=/usr/bin/killall x11vnc
 Restart=on-failure
 
