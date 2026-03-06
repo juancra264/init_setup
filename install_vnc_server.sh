@@ -53,7 +53,7 @@ EOF
   echo "${blue}###############################################################################${reset}"
   sudo systemctl daemon-reload
   sudo systemctl enable vncserver.service
-  sudo systemctl restart vncserver.service
+  sudo systemctl start vncserver.service
   echo "${blue}###############################################################################${reset}"
   echo "${blue} VNC Server installed${reset}"
   echo "${blue}###############################################################################${reset}"
