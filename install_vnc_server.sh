@@ -29,7 +29,7 @@ f_linux_vncserver() {
   echo "${blue} Configuring VNC Server Password${reset}"
   echo "${blue}###############################################################################${reset}"
   # Define the target path
-  SERVICE_FILE="/etc/systemd/system/x11vnc.service"
+  SERVICE_FILE="/etc/systemd/system/vncserver.service"
   # Use 'tee' to write the file with sudo privileges
 cat <<EOF | sudo tee $SERVICE_FILE > /dev/null
 [Unit]
