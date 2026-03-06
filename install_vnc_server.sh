@@ -18,25 +18,52 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # #############################################################################
 # ## Functions Declarations
 # #############################################################################
-f_linux_docker() {
+f_linux_vncserver() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing VNC Server${reset}"
   echo "${blue}###############################################################################${reset}"
   sudo apt update
   sudo apt install x11vnc -y
   echo "${blue}###############################################################################${reset}"
+  echo "${blue} Setting VNC Server Password${reset}"
+  echo "${blue}###############################################################################${reset}"
+  sudo x11vnc -storepasswd /etc/vncserver.pass
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring VNC Server Password${reset}"
+  echo "${blue}###############################################################################${reset}"
+cat << 'EOF' > /lib/systemd/system/vncserver.service
+[Unit]
+Description=vncserver service
+After=display-manager.service network.target syslog.target
+exit
+[Service]
+Type=simple
+ExecStart=/usr/bin/x11vnc -forever -display :0 -auth guess -loop -noxdamage -repeat -rfbauth /etc/vncserver.pass -rfbport 5900 -shared -bg -xrandr
+ExecStop=/usr/bin/killall x11vnc
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Enabling and Starting the  VNC Server${reset}"
+  echo "${blue}###############################################################################${reset}"
+  sudo systemctl daemon-reload
+  sudo systemctl enable vncserver.service
+  sudo systemctl start vncserver.service
+  echo "${blue}###############################################################################${reset}"
   echo "${blue} VNC Server installed${reset}"
   echo "${blue}###############################################################################${reset}"
-  docker --version
-  docker compose version
+  sudo systemctl status vncserver.service
 }
 
 f_linux_install_app() {
   # Ask if install desktop packages
-  read -r -p "Want to continue installing docker? [y/N]" -n 1
+  read -r -p "Want to continue installing VNC server? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    f_linux_docker
+    f_linux_vncserver
   fi
 }
 
