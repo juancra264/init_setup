@@ -38,7 +38,7 @@ After=display-manager.service network.target syslog.target
 exit
 [Service]
 Type=simple
-ExecStart=/usr/bin/x11vnc -forever -display :0 -auth guess -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared
+ExecStart=/usr/bin/x11vnc -forever -display :0 -auth /home/${USER}/.Xauthority -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared
 ExecStop=/usr/bin/killall x11vnc
 Restart=on-failure
 
@@ -53,7 +53,7 @@ EOF
   echo "${blue}###############################################################################${reset}"
   sudo systemctl daemon-reload
   sudo systemctl enable vncserver.service
-  sudo systemctl start vncserver.service
+  sudo systemctl restart vncserver.service
   echo "${blue}###############################################################################${reset}"
   echo "${blue} VNC Server installed${reset}"
   echo "${blue}###############################################################################${reset}"
