@@ -47,7 +47,7 @@ After=multi-user.target network.target
 exit
 [Service]
 Type=simple
-ExecStart=/usr/bin/x11vnc -auth /var/run/sddm/* -display :0 -forever -loop -noxdamage -repeat -rfbauth $VNC_PASS_FILE -rfbport 5900 -shared
+ExecStart=/usr/bin/x11vnc -auth guess -display :0 -forever -loop -noxdamage -repeat -rfbauth $VNC_PASS_FILE -rfbport 5900 -shared
 ExecStop=/usr/bin/killall x11vnc
 Restart=on-failure
 RestartSec=5
