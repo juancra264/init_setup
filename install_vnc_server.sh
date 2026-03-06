@@ -19,15 +19,12 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # ## Functions Declarations
 # #############################################################################
 f_linux_vncserver() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing VNC Server${reset}"
-  echo "${blue}###############################################################################${reset}"
   sudo apt update
   sudo apt install x11vnc -y
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Setting VNC Server Password${reset}"
+  echo "${blue} Setting VNC Server Password for ${USER}${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo x11vnc -storepasswd /etc/vncserver.pass
+  x11vnc -storepasswd
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Configuring VNC Server Password${reset}"
   echo "${blue}###############################################################################${reset}"
@@ -38,7 +35,7 @@ After=display-manager.service network.target syslog.target
 exit
 [Service]
 Type=simple
-ExecStart=/usr/bin/x11vnc -forever -display :0 -auth guess -loop -noxdamage -repeat -rfbauth /etc/vncserver.pass -rfbport 5900 -shared -bg -xrandr
+ExecStart=/usr/bin/x11vnc -forever -display :0 -auth guess -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared -bg -xrandr
 ExecStop=/usr/bin/killall x11vnc
 Restart=on-failure
 
@@ -59,6 +56,9 @@ EOF
 }
 
 f_linux_install_app() {
+  echo "${red}###############################################################################${reset}"
+  echo "${red} Installing VNC Server${reset}"
+  echo "${red}###############################################################################${reset}"
   # Ask if install desktop packages
   read -r -p "Want to continue installing VNC server? [y/N]" -n 1
   echo # (optional) move to a new line
