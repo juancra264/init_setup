@@ -1,0 +1,187 @@
+#!/bin/bash
+# -------------------------------
+# to run: sudo bash install_wifi_ux_monitor.sh
+# -------------------------------
+#
+set -e
+
+echo "==============================="
+echo " Wi-Fi UX Monitor Installer"
+echo "==============================="
+
+# -------------------------------
+# Update system
+# -------------------------------
+echo "[1/12] Updating system..."
+apt update && apt upgrade -y
+
+# -------------------------------
+# Install core packages
+# -------------------------------
+echo "[2/12] Installing dependencies..."
+apt install -y git curl wget vim htop jq net-tools dnsutils iperf3
+
+# -------------------------------
+# Install Prometheus + Node Exporter
+# -------------------------------
+echo "[3/12] Installing Prometheus and Node Exporter..."
+apt install -y prometheus prometheus-node-exporter
+
+systemctl enable prometheus
+systemctl enable prometheus-node-exporter
+systemctl restart prometheus
+systemctl restart prometheus-node-exporter
+
+# -------------------------------
+# Install Blackbox Exporter
+# -------------------------------
+echo "[4/12] Installing Prometheus Blackbox Exporter..."
+apt install -y prometheus-blackbox-exporter
+
+systemctl enable prometheus-blackbox-exporter
+systemctl restart prometheus-blackbox-exporter
+
+# -------------------------------
+# Create Prometheus config extension
+# -------------------------------
+echo "[5/12] Configuring Prometheus..."
+cat << 'EOF' > /etc/prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        - 1.1.1.1
+        - 8.8.8.8
+        - 8.8.4.4
+        - google.com
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9115
+
+  - job_name: 'wifi_metrics'
+    scrape_interval: 30s
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['localhost:9101']
+EOF
+
+systemctl restart prometheus
+
+# -------------------------------
+# Install Smokeping
+# -------------------------------
+echo "[6/12] Installing Smokeping..."
+apt install -y smokeping
+
+cat << 'EOF' > /etc/smokeping/config.d/Targets
+*** Targets ***
+probe = FPing
+
++ Local
+menu = Local Router
+title = Local Router Ping
+host = 192.168.1.1
+
++ Cloudflare
+menu = Cloudflare
+title = Cloudflare DNS
+host = 1.1.1.1
+
++ GoogleDNS
+menu = GoogleDNS
+title = Google DNS
+host = 8.8.8.8
+
+EOF
+
+systemctl enable smokeping
+systemctl restart smokeping
+
+# -------------------------------
+# Install Ookla Speedtest CLI
+# -------------------------------
+echo "[7/12] Installing Speedtest CLI..."
+apt install -y speedtest-cli
+
+mkdir -p /var/log/wifi-monitor
+
+# Cron job for periodic speedtests
+echo "[8/12] Setting up speedtest cron task..."
+(crontab -l 2>/dev/null; echo "*/15 * * * * /usr/bin/speedtest --format=json >> /var/log/wifi-monitor/speedtests.log") | crontab -
+
+# -------------------------------
+# Install Wi-Fi measurement tools
+# -------------------------------
+echo "[9/12] Installing Wi-Fi tools (iw, wavemon)..."
+apt install -y wavemon wireless-tools
+
+# -------------------------------
+# Prometheus textfile collector directory
+# -------------------------------
+echo "[10/12] Creating Prometheus Wi-Fi metrics collector..."
+mkdir -p /var/lib/prometheus/node-exporter/
+chmod 777 /var/lib/prometheus/node-exporter/
+
+cat << 'EOF' > /usr/local/bin/wifi_metrics.sh
+#!/bin/bash
+OUT="/var/lib/prometheus/node-exporter/wifi.prom"
+
+signal=$(iw dev wlan0 link | grep signal | awk '{print $2}')
+tx_bitrate=$(iw dev wlan0 link | grep "tx bitrate" | awk '{print $3}')
+rx_bitrate=$(iw dev wlan0 link | grep "rx bitrate" | awk '{print $3}')
+
+echo "# HELP wifi_signal_dbm Wi-Fi Signal Strength (dBm)" > $OUT
+echo "# TYPE wifi_signal_dbm gauge" >> $OUT
+echo "wifi_signal_dbm $signal" >> $OUT
+
+echo "# HELP wifi_tx_bitrate Wi-Fi TX Bitrate (Mbps)" >> $OUT
+echo "# TYPE wifi_tx_bitrate gauge" >> $OUT
+echo "wifi_tx_bitrate $tx_bitrate" >> $OUT
+
+echo "# HELP wifi_rx_bitrate Wi-Fi RX Bitrate (Mbps)" >> $OUT
+echo "# TYPE wifi_rx_bitrate gauge" >> $OUT
+echo "wifi_rx_bitrate $rx_bitrate" >> $OUT
+EOF
+
+chmod +x /usr/local/bin/wifi_metrics.sh
+
+# Cron job for Wi-Fi metrics
+echo "[11/12] Setting up Wi-Fi metrics cron..."
+(crontab -l 2>/dev/null; echo "*/1 * * * * /usr/local/bin/wifi_metrics.sh") | crontab -
+
+# -------------------------------
+# Install Grafana
+# -------------------------------
+echo "[12/12] Installing Grafana..."
+apt install -y grafana
+
+systemctl enable grafana-server
+systemctl restart grafana-server
+
+echo "========================================"
+echo " INSTALLATION COMPLETE!"
+echo "========================================"
+echo "Grafana:       http://<your-pi-ip>:3000"
+echo "Prometheus:    http://<your-pi-ip>:9090"
+echo "Smokeping:     http://<your-pi-ip>/smokeping"
+echo ""
+echo "Default Grafana login: admin / admin"
+echo "========================================"
