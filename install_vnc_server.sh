@@ -28,7 +28,10 @@ f_linux_vncserver() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Configuring VNC Server Password${reset}"
   echo "${blue}###############################################################################${reset}"
-sudo cat << 'EOF' > /lib/systemd/system/vncserver.service
+  # Define the target path
+  SERVICE_FILE="/lib/systemd/system/vncserver.service"
+  # Use 'tee' to write the file with sudo privileges
+cat <<EOF | sudo tee $SERVICE_FILE > /dev/null
 [Unit]
 Description=vncserver service
 After=display-manager.service network.target syslog.target
@@ -43,6 +46,8 @@ Restart=on-failure
 WantedBy=multi-user.target
 
 EOF
+  # Set correct permissions
+  sudo chmod 644 $SERVICE_FILE
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Enabling and Starting the  VNC Server${reset}"
   echo "${blue}###############################################################################${reset}"
