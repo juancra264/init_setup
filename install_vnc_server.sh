@@ -24,7 +24,16 @@ f_linux_vncserver() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Setting VNC Server Password for ${USER}${reset}"
   echo "${blue}###############################################################################${reset}"
-  x11vnc -storepasswd
+  VNC_PASS_DIR="/home/$USER/.vnc"
+  VNC_PASS_FILE="$VNC_PASS_DIR/passwd"
+
+  if [ ! -f "$VNC_PASS_FILE" ]; then
+      echo "Setting up VNC password..."
+      mkdir -p "$VNC_PASS_DIR"
+      # This will prompt you for a password
+      x11vnc -storepasswd "$VNC_PASS_FILE"
+      chown -R $USER:$USER "$VNC_PASS_DIR"
+  fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Configuring VNC Server Password${reset}"
   echo "${blue}###############################################################################${reset}"
@@ -34,13 +43,14 @@ f_linux_vncserver() {
 cat <<EOF | sudo tee $SERVICE_FILE > /dev/null
 [Unit]
 Description=vncserver service
-After=display-manager.service network.target syslog.target
+After=multi-user.target network.target
 exit
 [Service]
 Type=simple
-ExecStart=/usr/bin/x11vnc -auth /var/run/sddm/* -display :0 -forever -loop -noxdamage -repeat -rfbauth /home/${USER}/.vnc/passwd -rfbport 5900 -shared
+ExecStart=/usr/bin/x11vnc -auth /var/run/sddm/* -display :0 -forever -loop -noxdamage -repeat -rfbauth $VNC_PASS_FILE -rfbport 5900 -shared
 ExecStop=/usr/bin/killall x11vnc
 Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
@@ -53,11 +63,11 @@ EOF
   echo "${blue}###############################################################################${reset}"
   sudo systemctl daemon-reload
   sudo systemctl enable vncserver.service
-  sudo systemctl start vncserver.service
+  sudo systemctl restart vncserver.service
   echo "${blue}###############################################################################${reset}"
   echo "${blue} VNC Server installed${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo systemctl status vncserver.service
+  sudo systemctl status vncserver.service --no-pager
 }
 
 f_linux_install_app() {
