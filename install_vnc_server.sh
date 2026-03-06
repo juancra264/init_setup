@@ -31,7 +31,7 @@ f_linux_vncserver() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Configuring VNC Server Password${reset}"
   echo "${blue}###############################################################################${reset}"
-cat << 'EOF' > /lib/systemd/system/vncserver.service
+sudo cat << 'EOF' > /lib/systemd/system/vncserver.service
 [Unit]
 Description=vncserver service
 After=display-manager.service network.target syslog.target
