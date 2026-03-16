@@ -1,0 +1,9 @@
+syntax on
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set showmatch
+set wrap
+set tabstop=4
+set background=light
