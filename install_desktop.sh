@@ -398,6 +398,14 @@ echo "${blue}###################################################################
 rm -rf $HOME/.tmux.conf
 ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
 
+# for kitty config
+echo "${blue}###############################################################################${reset}"
+echo "${blue} Configuring KITTY${reset}"
+echo "${blue}###############################################################################${reset}"
+rm -rf $HOME/.config/kitty/kitty.conf
+mkdir -p $HOME/.config/kitty
+ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
+
 echo "${blue}###############################################################################${reset}"
 echo "${blue} Installing TMUX pluggings${reset}"
 echo "${blue}###############################################################################${reset}"
