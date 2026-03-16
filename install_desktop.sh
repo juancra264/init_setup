@@ -258,15 +258,15 @@ f_linux_install_app() {
   f_linux_install_ntp
   f_linux_netbird
   # Ask if install desktop packages
-  read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+  #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
+  #echo # (optional) move to a new line
+  #if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     #f_linux_brave
     #f_linux_mullvad
-    f_linux_spotify
+    #f_linux_spotify
     #f_linux_yubiauth
     #f_linux_bluetoothManager
-  fi
+  #fi
   #read -r -p "Want to continue with infosec (Kali) packages install? [y/N]" -n 1
   #echo # (optional) move to a new line
   #if [[ "$REPLY" =~ ^[Yy]$ ]]; then

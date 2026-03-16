@@ -1,0 +1,9 @@
+[user]
+	email = juancra264@hotmail.com
+	name = juancra264
+	username = juancra264
+[core]
+	hooksPath = /Users/juaramirez/.config/git/hooks/
+
+[init]
+	defaultBranch = main
