@@ -51,6 +51,8 @@ f_linux_basic_packages() {
   sudo apt install picocom -y
   # Monitoring tools
   sudo apt install ncdu btop glances bmon htop -y
+  # File managers
+  sudo apt install filezilla -y
   # Add current user to dialout group to use the serial interfaces with picocom.
   sudo usermod -a -G dialout "$USER"
 }
@@ -153,6 +155,21 @@ f_linux_netbird() {
     sudo apt-get update
     sudo apt-get install netbird -y
     sudo apt-get install netbird-ui -y
+  fi
+}
+
+f_linux_forticlient() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Forticlient${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want install Forticlient? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg
+    echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free
+' | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
+    sudo apt-get update
+    sudo apt install forticlient
   fi
 }
 
