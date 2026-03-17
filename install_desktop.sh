@@ -173,6 +173,20 @@ f_linux_forticlient() {
   fi
 }
 
+f_linux_protonvpnclient() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing ProtonVPN Client${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want install ProtonVPN Client? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
+    sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
+    sudo apt install proton-vpn-gnome-desktop -y
+    sudo apt install gnome-shell-extension-appindicator -y
+  fi
+}
+
 f_linux_gpstools() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing GPS tools${reset}"
@@ -274,6 +288,7 @@ f_linux_install_app() {
   f_linux_basic_packages
   f_linux_install_ntp
   f_linux_netbird
+  f_linux_protonvpnclient
   # Ask if install desktop packages
   #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
   #echo # (optional) move to a new line
