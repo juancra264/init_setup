@@ -184,6 +184,7 @@ f_linux_protonvpnclient() {
     sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
     sudo apt install proton-vpn-gnome-desktop -y
     sudo apt install gnome-shell-extension-appindicator -y
+    sudo rm -rf ./protonvpn-stable-release_1.0.8_all.deb
   fi
 }
 
