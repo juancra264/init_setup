@@ -164,11 +164,10 @@ f_linux_forticlient() {
   read -r -p "Want install Forticlient? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg
-    echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free
-' | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
-    sudo apt-get update
-    sudo apt install forticlient
+    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg   
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free" | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
+    sudo apt update   
+    sudo apt install forticlient -y
   fi
 }
 
@@ -193,8 +192,10 @@ f_linux_claudecodecli() {
   echo "${blue}###############################################################################${reset}"
   read -r -p "Want install Claude Code CLI? [y/N]" -n 1
   echo # (optional) move to a new line
-  curl -fsSL https://claude.ai/install.sh | bash
-  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    curl -fsSL https://claude.ai/install.sh | bash
+    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+  fi
 }
 
 f_linux_gpstools() {
@@ -298,6 +299,7 @@ f_linux_install_app() {
   f_linux_basic_packages
   f_linux_install_ntp
   f_linux_netbird
+  f_linux_forticlient
   f_linux_protonvpnclient
   f_linux_claudecodecli
   # Ask if install desktop packages
@@ -472,21 +474,26 @@ echo "${green}##################################################################
 echo "${green} Installing and configuration complete !!!! ${reset}"
 echo "${green}###############################################################################${reset}"
 
-echo " "
-echo "${cyan}###############################################################################${reset}"
-echo "${cyan} Install Oh-my-zsh and power level${reset}"
-echo "${cyan}###############################################################################${reset}"
-echo "${cyan} Manual Installation:${reset}"
-echo 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
-echo 'git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions'
-echo 'cp /etc/skel/.zshrc ~/.zshrc'
-echo 'git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k'
-echo "echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc"
+#echo " "
+#echo "${cyan}###############################################################################${reset}"
+#echo "${cyan} Install Oh-my-zsh and power level${reset}"
+#echo "${cyan}###############################################################################${reset}"
+#echo "${cyan} Manual Installation:${reset}"
+#echo 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+#echo 'git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions'
+#echo 'cp /etc/skel/.zshrc ~/.zshrc'
+#echo 'git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k'
+#echo "echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc"
 
 if [ -f /var/run/reboot-required ]; then
   echo "${red}###############################################################################${reset}"
   echo "${red} Please reboot the system${reset}"
   echo "${red}###############################################################################${reset}"
+  read -r -p "Want to reboot the system? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      sudo reboot
+  fi
 fi
 
 exit 0
