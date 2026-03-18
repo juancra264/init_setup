@@ -201,6 +201,19 @@ f_linux_claudecodecli() {
   fi
 }
 
+f_linux_virt_manager() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Virt Manager${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want install Virt Manager? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt update
+    sudo apt install qemu-kvm libvirt-daemon-system virt-manager
+    sudo usermod -aG libvirt $USER
+  fi
+}
+
 f_linux_gpstools() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing GPS tools${reset}"
@@ -305,6 +318,7 @@ f_linux_install_app() {
   f_linux_forticlient
   f_linux_protonvpnclient
   f_linux_claudecodecli
+  f_linux_virt_manager
   # Ask if install desktop packages
   #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
   #echo # (optional) move to a new line
