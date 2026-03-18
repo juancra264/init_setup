@@ -73,7 +73,10 @@ f_linux_bluetoothManager() {
   sudo systemctl start bluetooth.service
 }
 
-f_linux_install_ntp(){
+f_linux_ntp_client(){
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing ntp sec client${reset}"
+  echo "${blue}###############################################################################${reset}"
   read -r -p "Want install ntpsec? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -297,7 +300,7 @@ f_linux_install_app() {
   # General Linux installation server and desktop
   f_linux_upgrade
   f_linux_basic_packages
-  f_linux_install_ntp
+  f_linux_ntp_client
   f_linux_netbird
   f_linux_forticlient
   f_linux_protonvpnclient
@@ -429,45 +432,53 @@ case "$OS" in
     exit 2
 esac
 
-# for vim
-echo "${blue}###############################################################################${reset}"
-echo "${blue} Configuring VIM${reset}"
-echo "${blue}###############################################################################${reset}"
-rm -rf $HOME/.vimrc
-ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
-
-# for tmux
-echo "${blue}###############################################################################${reset}"
-echo "${blue} Configuring TMUX${reset}"
-echo "${blue}###############################################################################${reset}"
-rm -rf $HOME/.tmux.conf
-ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
-
-# for kitty config
-echo "${blue}###############################################################################${reset}"
-echo "${blue} Configuring KITTY${reset}"
-echo "${blue}###############################################################################${reset}"
-rm -rf $HOME/.config/kitty/kitty.conf
-mkdir -p $HOME/.config/kitty
-ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
 
 echo "${blue}###############################################################################${reset}"
-echo "${blue} Installing TMUX pluggings${reset}"
+echo "${blue} Configuration steps${reset}"
 echo "${blue}###############################################################################${reset}"
-# Plugin Manager - https://github.com/tmux-plugins/tpm
-# If you didn't use my dotfiles install script you'll need to:
-rm -rf ~/.tmux/plugins/tpm
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+read -r -p "Want to configure apps (vim, tmux, kitty, git)? [y/N]" -n 1
+echo # (optional) move to a new line
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+  # for vim
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring VIM${reset}"
+  echo "${blue}###############################################################################${reset}"
+  rm -rf $HOME/.vimrc
+  ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
 
-# for git config
-echo "${blue}###############################################################################${reset}"
-echo "${blue} Configuring Git${reset}"
-echo "${blue}###############################################################################${reset}"
-rm -rf $HOME/.gitconfig
-ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
-git config --global user.name "juancra264"
-git config --global user.email "juancra264@hotmail.com"
-git config --global user.username "juancra264"
+  # for tmux
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring TMUX${reset}"
+  echo "${blue}###############################################################################${reset}"
+  rm -rf $HOME/.tmux.conf
+  ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
+
+  # for kitty config
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring KITTY${reset}"
+  echo "${blue}###############################################################################${reset}"
+  rm -rf $HOME/.config/kitty/kitty.conf
+  mkdir -p $HOME/.config/kitty
+  ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
+
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing TMUX pluggings${reset}"
+  echo "${blue}###############################################################################${reset}"
+  # Plugin Manager - https://github.com/tmux-plugins/tpm
+  # If you didn't use my dotfiles install script you'll need to:
+  rm -rf ~/.tmux/plugins/tpm
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+  # for git config
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring Git${reset}"
+  echo "${blue}###############################################################################${reset}"
+  rm -rf $HOME/.gitconfig
+  ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
+  git config --global user.name "juancra264"
+  git config --global user.email "juancra264@hotmail.com"
+  git config --global user.username "juancra264"
+fi
 
 echo " "
 echo "${green}###############################################################################${reset}"
