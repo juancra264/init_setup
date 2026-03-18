@@ -108,7 +108,6 @@ f_linux_kismet() {
     wget -O - https://www.kismetwireless.net/repos/kismet-release.gpg.key --quiet | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
     echo 'deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://www.kismetwireless.net/repos/apt/release/noble noble main' | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
     sudo apt-get update
- 
     echo "${blue}###############################################################################${reset}"
     echo "${blue} Installing dependencies for kismet${reset}"
     echo "${blue}###############################################################################${reset}"
@@ -186,6 +185,16 @@ f_linux_protonvpnclient() {
     sudo apt install gnome-shell-extension-appindicator -y
     sudo rm -rf ./protonvpn-stable-release_1.0.8_all.deb
   fi
+}
+
+f_linux_claudecodecli() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Claude Code CLI${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want install Claude Code CLI? [y/N]" -n 1
+  echo # (optional) move to a new line
+  curl -fsSL https://claude.ai/install.sh | bash
+  echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 }
 
 f_linux_gpstools() {
@@ -290,6 +299,7 @@ f_linux_install_app() {
   f_linux_install_ntp
   f_linux_netbird
   f_linux_protonvpnclient
+  f_linux_claudecodecli
   # Ask if install desktop packages
   #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
   #echo # (optional) move to a new line
