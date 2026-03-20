@@ -139,6 +139,7 @@ f_linux_desktop_packages() {
     sudo snap install code --classic
     sudo snap install asana-snap
     sudo snap install spotify
+    sudo snap install drawio   
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
