@@ -181,7 +181,7 @@ f_linux_terminal(){
     echo "${blue} Configuring zshrc${reset}"
     echo "${blue}###############################################################################${reset}"
     rm -rf $HOME/.zshrc
-    ln -s $HOME/init_setup/config/.zshrc $HOME/.zshrc
+    cp $HOME/init_setup/config/zshrc $HOME/.zshrc
   fi
 }
 
