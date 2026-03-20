@@ -310,18 +310,6 @@ f_linux_protonvpnclient() {
   fi
 }
 
-f_linux_claudecodecli() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Claude Code CLI${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    curl -fsSL https://claude.ai/install.sh | bash
-    echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
-  fi
-}
-
 f_linux_virt_manager() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Virt Manager${reset}"
@@ -447,7 +435,6 @@ f_linux_install_app() {
   f_linux_netbird
   f_linux_forticlient
   f_linux_protonvpnclient
-  f_linux_claudecodecli
   f_linux_virt_manager
   f_linux_terminal
   # Ask if install desktop packages
