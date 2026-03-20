@@ -18,13 +18,6 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # #############################################################################
 # ## Functions Declarations
 # #############################################################################
-f_linux_ssh_server() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Installing SSH server${reset}"
-  echo "${blue}###############################################################################${reset}"
-  sudo apt install openssh-server -y
-}
-
 f_linux_upgrade() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Running a full upgrade${reset}"
@@ -36,7 +29,9 @@ f_linux_upgrade() {
     sudo apt upgrade -y
     sudo apt dist-upgrade -y
     sudo apt-get full-upgrade -y
+    sudo apt install snapd -y 
     sudo apt autoremove -y
+    sudo snap refresh
   fi
 }
 
@@ -63,63 +58,15 @@ f_linux_basic_packages() {
     # Add current user to dialout group to use the serial interfaces with picocom.
     sudo usermod -a -G dialout "$USER"
   fi
-}
-
-f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing desktop packages ( guake kitty remmina) ${reset}"
+  echo "${blue} Installing ntp sec client${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install guake kitty remmina -y
-  fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing tweaks packages ${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install -y gnome-tweaks gnome-shell-extension-manager   
-  fi
-  # Remove the the Gnome dock
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Remove Gnome dock ${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt remove gnome-shell-extension-ubuntu-dock -y
-  fi
-  # Configuring shortcuts
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring shortcuts ${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    # Define the path and key ID
-    KEY_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-    # Add the new keybinding to the list
-    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \
-    "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
-    # Set the shortcut details for Guake terminal
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "Show/Hide Guake"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH binding "<Alt>w"
-    # Changing close window shortcut to alt+q
-    gsettings set org.gnome.desktop.wm.keybindings close "['<Alt>q']"
-  fi
-  # Configuring Tweeking desktop settings
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Tweaking desktop settings ${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    gsettings set org.gnome.desktop.background picture-uri ''
-    gsettings set org.gnome.desktop.background primary-color '#000000'
-    gsettings set org.gnome.desktop.background color-shading-type 'solid'   
+    sudo apt install ntpsec -y
+    sudo systemctl enable ntpsec.service
+    sudo systemctl restart ntpsec.service  
   fi
 }
 
@@ -185,31 +132,152 @@ f_linux_terminal(){
   fi
 }
 
-f_linux_bluetoothManager() {
+f_linux_server_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing bluetooth manager${reset}"
-  echo "${blue}###############################################################################${reset}"
-  sudo apt install blueman -y 
-  sudo systemctl enable bluetooth.service
-  sudo systemctl start bluetooth.service
-}
-
-f_linux_ntp_client(){
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing ntp sec client${reset}"
+  echo "${blue}  Installing SSH server${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install ntpsec -y
-    sudo systemctl enable ntpsec.service
-    sudo systemctl restart ntpsec.service  
+    sudo apt install openssh-server -y
+    sudo systemctl enable ssh.service
+    sudo systemctl start ssh.service
   fi
 }
 
-f_linux_SecPackages() {
+f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Security Packages${reset}"
+  echo "${blue} Installing desktop packages${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install guake kitty remmina -y
+    sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y
+    sudo snap install teams-for-linux   
+    sudo snap install code --classic
+    sudo snap install asana-snap
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Brave${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      sudo curl -fsS https://dl.brave.com/install.sh | sh
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Virt Manager${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install qemu-kvm libvirt-daemon-system virt-manager -y
+    sudo usermod -aG libvirt $USER
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Spotify${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      # Spotify installation on Ubuntu
+      curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+      echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+      sudo apt-get update 
+      sudo apt-get install spotify-client -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing yubi authenticator${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install yubioath-desktop -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing GPS tools${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install gpsd gpsd-clients libgps-dev -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing tweaks packages ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install -y gnome-tweaks gnome-shell-extension-manager   
+  fi
+
+  # GNOME Shell extension cli
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing tweaks packages ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    pip3 install --user gnome-extensions-cli --break-system-packages
+    gext install clipboard-indicator@tudmotu.com
+    gext enable clipboard-indicator@tudmotu.com
+    gext install workspace-indicator@gnome-shell-extensions.gcampax.github.com
+    gext enable workspace-indicator@gnome-shell-extensions.gcampax.github.com
+    gext install ubuntu-appindicators@ubuntu.com
+    gext enable ubuntu-appindicators@ubuntu.com
+    gext install user-theme@gnome-shell-extensions.gcampax.github.com
+    gext enable user-theme@gnome-shell-extensions.gcampax.github.com
+    gext install forge@jmmaranan.com
+    gext enable forge@jmmaranan.com
+    gext install Vitals@CoreCoding.com   
+    gext enable Vitals@CoreCoding.com
+    gnome-extensions list --enabled
+  fi
+  # Remove the the Gnome dock
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Remove Gnome dock ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt remove gnome-shell-extension-ubuntu-dock -y
+  fi
+  # Configuring shortcuts
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring shortcuts ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Define the path and key ID
+    KEY_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+    # Add the new keybinding to the list
+    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \
+    "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+    # Set the shortcut details for Guake terminal
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "Show/Hide Guake"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH binding "<Alt>w"
+    # Changing close window shortcut to alt+q
+    gsettings set org.gnome.desktop.wm.keybindings close "['<Alt>q']"
+  fi
+  # Configuring Tweeking desktop settings
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Tweaking desktop settings ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    gsettings set org.gnome.desktop.background picture-uri ''
+    gsettings set org.gnome.desktop.background primary-color '#000000'
+    gsettings set org.gnome.desktop.background color-shading-type 'solid'   
+  fi
+}
+
+f_linux_Kali_Packages() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Kali Packages${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -217,9 +285,47 @@ f_linux_SecPackages() {
     sudo apt install hcxtools tilix maltego burpsuite -y 
     sudo apt install hydra beef-xss nikto wavemon -y
   fi
-}
-
-f_linux_kismet() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Wireless Tools${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt update
+    sudo apt install bully hashcat hcxdumptool hcxtools macchanger -y 
+    sudo apt install aircrack-ng -y
+    sudo apt install wifite -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing RTL8812AU/21AU and RTL8814AU Wireless drivers${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt update
+    sudo apt upgrade -y
+    #sudo apt install linux-headers-generic build-essential git -y
+    sudo apt install dkms -y
+    rm -rf $HOME/rtw88
+    cd $HOME
+    git clone https://github.com/lwfinger/rtw88
+    cd $HOME/rtw88
+    make
+    sudo make install
+    sudo make install_fw
+    sudo cp rtw88.conf /etc/modprobe.d/
+    cd $SCRIPT_DIR
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing bluetooth manager${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install blueman -y 
+    sudo systemctl enable bluetooth.service
+    sudo systemctl start bluetooth.service
+  fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Compiling kismet${reset}"
   echo "${blue}###############################################################################${reset}"
@@ -256,142 +362,6 @@ f_linux_kismet() {
     echo "${blue}###############################################################################${reset}"
     sudo apt install kismet -y
   fi
-}
-
-f_linux_yubiauth() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing yubi authenticator${reset}"
-  echo "${blue}###############################################################################${reset}"
-  sudo apt install yubioath-desktop -y
-}
-
-f_linux_netbird() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Netbird client${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt-get install ca-certificates curl gnupg -y
-    curl -sSL https://pkgs.netbird.io/debian/public.key | sudo gpg --dearmor --output /usr/share/keyrings/netbird-archive-keyring.gpg
-    echo 'deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main' | sudo tee /etc/apt/sources.list.d/netbird.list
-    sudo apt-get update
-    sudo apt-get install netbird -y
-    sudo apt-get install netbird-ui -y
-  fi
-}
-
-f_linux_forticlient() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Forticlient${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg   
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free" | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
-    sudo apt update   
-    sudo apt install forticlient -y
-  fi
-}
-
-f_linux_protonvpnclient() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing ProtonVPN Client${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
-    sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
-    sudo apt install proton-vpn-gnome-desktop -y
-    sudo apt install gnome-shell-extension-appindicator -y
-    sudo rm -rf ./protonvpn-stable-release_1.0.8_all.deb
-  fi
-}
-
-f_linux_virt_manager() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Virt Manager${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install qemu-kvm libvirt-daemon-system virt-manager -y
-    sudo usermod -aG libvirt $USER
-  fi
-}
-
-f_linux_gpstools() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing GPS tools${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install gpsd gpsd-clients libgps-dev -y
-  fi
-}
-
-f_linux_brave() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing brave${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      sudo curl -fsS https://dl.brave.com/install.sh | sh
-  fi
-}
-
-f_linux_mullvad() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Mullvad browser${reset}"
-  echo "${blue}###############################################################################${reset}"
-  sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc
-  echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable stable main" | sudo tee /etc/apt/sources.list.d/mullvad.list
-  sudo apt update
-  sudo apt install mullvad-browser
-}
-
-f_linux_alphaDriver(){
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing RTL8812AU/21AU and RTL8814AU Wireless drivers${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt update
-    sudo apt upgrade -y
-    #sudo apt install linux-headers-generic build-essential git -y
-    sudo apt install dkms -y
-    rm -rf $HOME/rtw88
-    cd $HOME
-    git clone https://github.com/lwfinger/rtw88
-    cd $HOME/rtw88
-    make
-    sudo make install
-    sudo make install_fw
-    sudo cp rtw88.conf /etc/modprobe.d/
-    cd $SCRIPT_DIR
-  fi
-}
-
-f_linux_wifitools(){
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Wireless Tools${reset}"
-  echo "${blue}###############################################################################${reset}"
-  read -r -p "Continue? [y/N]" -n 1
-  echo # (optional) move to a new line
-  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt update
-    sudo apt install bully hashcat hcxdumptool hcxtools macchanger -y 
-    sudo apt install aircrack-ng -y
-    sudo apt install wifite -y
-  fi
-}
-
-f_linux_metasploit(){
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Metasploit suite${reset}"
   echo "${blue}###############################################################################${reset}"
@@ -407,21 +377,94 @@ f_linux_metasploit(){
     echo "${red} Verify database connection > db_status ${reset}"
     echo "${red} Update Metasploit > msfupdate ${reset}"
     echo "${red}###############################################################################${reset}" 
-  fi
+  fi  
 }
 
-f_linux_spotify() {
+f_linux_vpns() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Spotify${reset}"
+  echo "${blue} Installing Netbird client${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      # Spotify installation on Ubuntu
-      curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
-      echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
-      sudo apt-get update 
-      sudo apt-get install spotify-client -y
+    sudo apt-get install ca-certificates curl gnupg -y
+    curl -sSL https://pkgs.netbird.io/debian/public.key | sudo gpg --dearmor --output /usr/share/keyrings/netbird-archive-keyring.gpg
+    echo 'deb [signed-by=/usr/share/keyrings/netbird-archive-keyring.gpg] https://pkgs.netbird.io/debian stable main' | sudo tee /etc/apt/sources.list.d/netbird.list
+    sudo apt-get update
+    sudo apt-get install netbird -y
+    sudo apt-get install netbird-ui -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Forticlient${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg   
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free" | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
+    sudo apt update   
+    sudo apt install forticlient -y
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing ProtonVPN Client${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
+    sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
+    sudo apt install proton-vpn-gnome-desktop -y
+    sudo apt install gnome-shell-extension-appindicator -y
+    sudo rm -rf ./protonvpn-stable-release_1.0.8_all.deb
+  fi
+}
+
+f_linux_config_apps(){
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuration steps${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want to configure apps (vim, tmux, kitty, git)? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # for vim
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring VIM${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.vimrc
+    ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
+
+    # for tmux
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring TMUX${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.tmux.conf
+    ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
+
+    # for kitty config
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring KITTY${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.config/kitty/kitty.conf
+    mkdir -p $HOME/.config/kitty
+    ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
+
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Installing TMUX pluggings${reset}"
+    echo "${blue}###############################################################################${reset}"
+    # Plugin Manager - https://github.com/tmux-plugins/tpm
+    # If you didn't use my dotfiles install script you'll need to:
+    rm -rf ~/.tmux/plugins/tpm
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+    # for git config
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring Git${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.gitconfig
+    ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
+    git config --global user.name "juancra264"
+    git config --global user.email "juancra264@hotmail.com"
+    git config --global user.username "juancra264"
   fi
 }
 
@@ -429,29 +472,26 @@ f_linux_install_app() {
   # General Linux installation server and desktop
   f_linux_upgrade
   f_linux_basic_packages
-  f_linux_desktop_packages
-  f_linux_ntp_client
-  f_linux_netbird
-  f_linux_forticlient
-  f_linux_protonvpnclient
-  f_linux_virt_manager
   f_linux_terminal
-  # Ask if install desktop packages
-  #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
-  #echo # (optional) move to a new line
-  #if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    #f_linux_brave
-    #f_linux_mullvad
-    #f_linux_spotify
-    #f_linux_yubiauth
-    #f_linux_bluetoothManager
-  #fi
-  #read -r -p "Want to continue with infosec (Kali) packages install? [y/N]" -n 1
-  #echo # (optional) move to a new line
-  #if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    #f_linux_SecPackages
-    #f_linux_gpstools
-  #fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Desktop Packages${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    f_linux_desktop_packages  
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Server Packages${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    f_linux_server_packages  
+  fi
+  f_linux_vpns
+  f_linux_config_apps
+  
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
 }
@@ -564,54 +604,6 @@ case "$OS" in
 esac
 
 
-echo "${blue}###############################################################################${reset}"
-echo "${blue} Configuration steps${reset}"
-echo "${blue}###############################################################################${reset}"
-read -r -p "Want to configure apps (vim, tmux, kitty, git)? [y/N]" -n 1
-echo # (optional) move to a new line
-if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-  # for vim
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring VIM${reset}"
-  echo "${blue}###############################################################################${reset}"
-  rm -rf $HOME/.vimrc
-  ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
-
-  # for tmux
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring TMUX${reset}"
-  echo "${blue}###############################################################################${reset}"
-  rm -rf $HOME/.tmux.conf
-  ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
-
-  # for kitty config
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring KITTY${reset}"
-  echo "${blue}###############################################################################${reset}"
-  rm -rf $HOME/.config/kitty/kitty.conf
-  mkdir -p $HOME/.config/kitty
-  ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
-
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing TMUX pluggings${reset}"
-  echo "${blue}###############################################################################${reset}"
-  # Plugin Manager - https://github.com/tmux-plugins/tpm
-  # If you didn't use my dotfiles install script you'll need to:
-  rm -rf ~/.tmux/plugins/tpm
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-  # for git config
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring Git${reset}"
-  echo "${blue}###############################################################################${reset}"
-  rm -rf $HOME/.gitconfig
-  ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
-  git config --global user.name "juancra264"
-  git config --global user.email "juancra264@hotmail.com"
-  git config --global user.username "juancra264"
-fi
-
-echo " "
 echo "${green}###############################################################################${reset}"
 echo "${green} Installing and configuration complete !!!! ${reset}"
 echo "${green}###############################################################################${reset}"
