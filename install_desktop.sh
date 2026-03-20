@@ -29,7 +29,7 @@ f_linux_upgrade() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Running a full upgrade${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want run full upgrade? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
@@ -44,7 +44,7 @@ f_linux_basic_packages() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing basic packages${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install basic packages? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Develop tools
@@ -69,18 +69,27 @@ f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing desktop packages ( guake kitty remmina) ${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install desktop packages? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install guake kitty remmina -y
+  fi
+  # Remove the the Gnome dock
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Remove Gnome dock ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt remove gnome-shell-extension-ubuntu-dock -y
   fi
 }
 
 f_linux_terminal(){
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing terminal packages ( zsh oh-my-zsh powerline) ${reset}"
+  echo "${blue} Installing Terminal packages ( zsh oh-my-zsh powerline) ${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install terminal packages? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     pip3 install --user powerline-status --break-system-packages
@@ -133,7 +142,6 @@ f_linux_terminal(){
   fi
 }
 
-
 f_linux_bluetoothManager() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing bluetooth manager${reset}"
@@ -147,7 +155,7 @@ f_linux_ntp_client(){
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing ntp sec client${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install ntpsec? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install ntpsec -y
@@ -160,7 +168,7 @@ f_linux_SecPackages() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Security Packages${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Security Packages? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install hcxtools tilix maltego burpsuite -y 
@@ -172,7 +180,7 @@ f_linux_kismet() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Compiling kismet${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install kismet? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     echo "${blue}###############################################################################${reset}"
@@ -218,7 +226,7 @@ f_linux_netbird() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Netbird client${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Netbird client? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt-get install ca-certificates curl gnupg -y
@@ -234,7 +242,7 @@ f_linux_forticlient() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Forticlient${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Forticlient? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg   
@@ -248,7 +256,7 @@ f_linux_protonvpnclient() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing ProtonVPN Client${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install ProtonVPN Client? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
@@ -263,7 +271,7 @@ f_linux_claudecodecli() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Claude Code CLI${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Claude Code CLI? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     curl -fsSL https://claude.ai/install.sh | bash
@@ -275,7 +283,7 @@ f_linux_virt_manager() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Virt Manager${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Virt Manager? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
@@ -288,14 +296,22 @@ f_linux_gpstools() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing GPS tools${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo apt install gpsd gpsd-clients libgps-dev -y
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install gpsd gpsd-clients libgps-dev -y
+  fi
 }
 
 f_linux_brave() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing brave${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo curl -fsS https://dl.brave.com/install.sh | sh
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      sudo curl -fsS https://dl.brave.com/install.sh | sh
+  fi
 }
 
 f_linux_mullvad() {
@@ -312,7 +328,7 @@ f_linux_alphaDriver(){
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing RTL8812AU/21AU and RTL8814AU Wireless drivers${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Wireless Drivers Alpha? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
@@ -335,7 +351,7 @@ f_linux_wifitools(){
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Wireless Tools${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Wireless tools? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
@@ -349,7 +365,7 @@ f_linux_metasploit(){
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Metasploit suite${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install Metasploit suite? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
@@ -368,7 +384,7 @@ f_linux_spotify() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Spotify${reset}"
   echo "${blue}###############################################################################${reset}"
-  read -r -p "Want install spotify? [y/N]" -n 1
+  read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       # Spotify installation on Ubuntu
