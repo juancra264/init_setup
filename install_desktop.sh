@@ -20,49 +20,119 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # #############################################################################
 f_linux_ssh_server() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} This is a linux${reset}"
+  echo "${blue}  Installing SSH server${reset}"
   echo "${blue}###############################################################################${reset}"
   sudo apt install openssh-server -y
 }
 
 f_linux_upgrade() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Upgrading${reset}"
+  echo "${blue} Running a full upgrade${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo apt update
-  sudo apt upgrade -y
-  sudo apt dist-upgrade -y
-  sudo apt-get full-upgrade -y
-  sudo apt autoremove -y
+  read -r -p "Want run full upgrade? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt update
+    sudo apt upgrade -y
+    sudo apt dist-upgrade -y
+    sudo apt-get full-upgrade -y
+    sudo apt autoremove -y
+  fi
 }
 
 f_linux_basic_packages() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing basic packages${reset}"
   echo "${blue}###############################################################################${reset}"
-  # Develop tools
-  sudo apt install git vim neovim tmux python3 python3-pip tlp jq  -y
-  # Linux extras
-  sudo apt install util-linux-extra gcc make wget bat mosh eza -y
-  # ZSH and zsh tools
-  sudo apt install zsh zsh-syntax-highlighting zsh-autosuggestions -y
-  # Network tools
-  sudo apt install net-tools dnsutils traceroute nmap wireless-tools wireshark iperf3 speedtest-cli -y
-  sudo apt install picocom -y
-  # Monitoring tools
-  sudo apt install ncdu btop glances bmon htop -y
-  # File managers
-  sudo apt install filezilla -y
-  # Add current user to dialout group to use the serial interfaces with picocom.
-  sudo usermod -a -G dialout "$USER"
+  read -r -p "Want install basic packages? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Develop tools
+    sudo apt install git neofetch vim neovim tmux python3 python3-pip tlp jq  -y
+    # Linux extras
+    sudo apt install util-linux-extra gcc make wget bat mosh eza -y
+    # ZSH and zsh tools
+    sudo apt install zsh zsh-syntax-highlighting zsh-autosuggestions -y
+    # Network tools
+    sudo apt install curl net-tools dnsutils traceroute nmap wireless-tools wireshark iperf3 speedtest-cli -y
+    sudo apt install picocom -y
+    # Monitoring tools
+    sudo apt install ncdu btop glances bmon htop -y
+    # File managers
+    sudo apt install filezilla -y
+    # Add current user to dialout group to use the serial interfaces with picocom.
+    sudo usermod -a -G dialout "$USER"
+  fi
 }
 
 f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing desktop packages${reset}"
+  echo "${blue} Installing desktop packages ( guake kitty remmina) ${reset}"
   echo "${blue}###############################################################################${reset}"
-  sudo apt install guake kitty remmina -y
+  read -r -p "Want install desktop packages? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install guake kitty remmina -y
+  fi
 }
+
+f_linux_terminal(){
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing terminal packages ( zsh oh-my-zsh powerline) ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Want install terminal packages? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    pip3 install --user powerline-status --break-system-packages
+    sudo apt install -y fonts-powerline
+    # Install Patched Font
+    if [ ! -d "$HOME/.fonts" ]; then
+      mkdir ~/.fonts
+      sudo cp -a fonts/. ~/.fonts/
+      fc-cache -vf ~/.fonts/
+    fi
+    # Install Oh My Zsh
+    if [ ! -d "$HOME/.oh-my-zsh" ]; then
+      sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    fi
+    # Install zsh plugins
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${blue}###############################################################################${reset}"
+    if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+      git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    fi
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${blue}###############################################################################${reset}"
+
+    if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
+      git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    fi
+    # Install powerlevel10k
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${blue}###############################################################################${reset}"
+    if [ ! -d "$HOME/powerlevel10k" ]; then
+      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/powerlevel10k
+    fi
+    # Install nettools
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${blue}###############################################################################${reset}"
+    if [ ! -d "$HOME/nettools" ]; then
+      git clone https://github.com/juancra264/nettools.git $HOME/nettools
+    else
+      # update nettools
+      cd $HOME/nettools
+      git pull
+      cd $SCRIPT_DIR
+    fi
+    # Switch the shell.
+    chsh -s $(which zsh)
+  fi
+}
+
 
 f_linux_bluetoothManager() {
   echo "${blue}###############################################################################${reset}"
@@ -313,12 +383,14 @@ f_linux_install_app() {
   # General Linux installation server and desktop
   f_linux_upgrade
   f_linux_basic_packages
+  f_linux_desktop_packages
   f_linux_ntp_client
   f_linux_netbird
   f_linux_forticlient
   f_linux_protonvpnclient
   f_linux_claudecodecli
   f_linux_virt_manager
+  f_linux_terminal
   # Ask if install desktop packages
   #read -r -p "Want to continue with desktop packages install? [y/N]" -n 1
   #echo # (optional) move to a new line
