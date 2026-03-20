@@ -48,7 +48,7 @@ f_linux_basic_packages() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Develop tools
-    sudo apt install git neofetch vim neovim tmux python3 python3-pip tlp jq  -y
+    sudo apt install git vim neovim tmux python3 python3-pip tlp jq  -y
     # Linux extras
     sudo apt install util-linux-extra gcc make wget bat mosh eza -y
     # ZSH and zsh tools
