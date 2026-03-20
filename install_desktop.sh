@@ -317,8 +317,7 @@ f_linux_virt_manager() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt update
-    sudo apt install qemu-kvm libvirt-daemon-system virt-manager
+    sudo apt install qemu-kvm libvirt-daemon-system virt-manager -y
     sudo usermod -aG libvirt $USER
   fi
 }
