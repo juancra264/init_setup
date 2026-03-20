@@ -54,7 +54,7 @@ f_linux_basic_packages() {
     # ZSH and zsh tools
     sudo apt install zsh zsh-syntax-highlighting zsh-autosuggestions -y
     # Network tools
-    sudo apt install curl net-tools dnsutils traceroute nmap wireless-tools wireshark iperf3 speedtest-cli -y
+    sudo apt install curl net-tools dnsutils traceroute nmap wireshark iperf3 speedtest-cli -y
     sudo apt install picocom -y
     # Monitoring tools
     sudo apt install ncdu btop glances bmon htop -y
