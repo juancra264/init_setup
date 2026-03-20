@@ -152,7 +152,6 @@ f_linux_terminal(){
     echo "${blue}###############################################################################${reset}"
     echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
     echo "${blue}###############################################################################${reset}"
-
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
       git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     fi
@@ -177,6 +176,12 @@ f_linux_terminal(){
     fi
     # Switch the shell.
     chsh -s $(which zsh)
+    # Copy zshrc config
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring zshrc${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.zshrc
+    ln -s $HOME/init_setup/config/.zshrc $HOME/.zshrc
   fi
 }
 
