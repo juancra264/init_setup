@@ -74,6 +74,14 @@ f_linux_desktop_packages() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install guake kitty remmina -y
   fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing tweaks packages ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install -y gnome-tweaks gnome-shell-extension-manager   
+  fi
   # Remove the the Gnome dock
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Remove Gnome dock ${reset}"
@@ -82,6 +90,36 @@ f_linux_desktop_packages() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt remove gnome-shell-extension-ubuntu-dock -y
+  fi
+  # Configuring shortcuts
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Configuring shortcuts ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Define the path and key ID
+    KEY_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+    # Add the new keybinding to the list
+    gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \
+    "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+    # Set the shortcut details for Guake terminal
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "Show/Hide Guake"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH binding "<Alt>w"
+    # Changing close window shortcut to alt+q
+    gsettings set org.gnome.desktop.wm.keybindings close "['<Alt>q']"
+  fi
+  # Configuring Tweeking desktop settings
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Tweaking desktop settings ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    gsettings set org.gnome.desktop.background picture-uri ''
+    gsettings set org.gnome.desktop.background primary-color '#000000'
+    gsettings set org.gnome.desktop.background color-shading-type 'solid'   
   fi
 }
 
