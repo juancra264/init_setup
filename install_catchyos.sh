@@ -221,7 +221,7 @@ f_linux_desktop_packages() {
     "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
     # Set the shortcut details for Guake terminal
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "Show/Hide Guake"
-    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t"
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t -e tmux"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH binding "<Alt>w"
     # Changing close window shortcut to alt+q
     gsettings set org.gnome.desktop.wm.keybindings close "['<Alt>q']"
