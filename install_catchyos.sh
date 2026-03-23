@@ -156,6 +156,21 @@ f_linux_desktop_packages() {
       sudo curl -fsS https://dl.brave.com/install.sh | sh
   fi
   echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Antivirus ClamAV${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+      sudo pacman -S clamav --noconfirm
+      sudo systemctl stop clamav-freshclam
+      sudo freshclam
+      sudo systemctl start clamav-freshclam
+      sudo systemctl enable clamav-freshclam
+      sudo systemctl enable --now clamav-daemon
+      clamscan -r /home/$USER
+      curl https://secure.eicar.org/eicar.com.txt | clamscan -
+  fi
+  echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Virt Manager${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
