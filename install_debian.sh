@@ -308,8 +308,12 @@ f_linux_server_packages() {
     echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
     sudo sysctl -p
     # Disable unnecessary services:
-    sudo systemctl disable --now multipathd.service
-    sudo systemctl disable --now apport.service
+    source /etc/os-release
+    if [[ "$ID" == "ubuntu" ]]; then
+      sudo systemctl disable --now snapd.service
+      sudo systemctl disable --now multipathd.service
+      sudo systemctl disable --now apport.service
+    fi
   fi
 
 }
