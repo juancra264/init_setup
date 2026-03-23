@@ -172,7 +172,7 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo pacman -S yubikey-manager yubikey-personalization --noconfirm
+    paru -S yubico-authenticator-bin --noconfirm   
   fi
   #echo "${blue}###############################################################################${reset}"
   #echo "${blue} Installing GPS tools${reset}"
