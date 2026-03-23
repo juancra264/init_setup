@@ -172,6 +172,9 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo pacman -S libusb --noconfirm
+    sudo pacman -S ccid pcsclite --noconfirm
+    sudo systemctl enable --now pcscd.service
     paru -S yubico-authenticator-bin --noconfirm   
   fi
   #echo "${blue}###############################################################################${reset}"
