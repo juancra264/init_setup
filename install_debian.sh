@@ -29,9 +29,7 @@ f_linux_upgrade() {
     sudo apt upgrade -y
     sudo apt dist-upgrade -y
     sudo apt-get full-upgrade -y
-    sudo apt install snapd -y 
     sudo apt autoremove -y
-    sudo snap refresh
   fi
 }
 
@@ -43,6 +41,7 @@ f_linux_basic_packages() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Develop tools
+    sudo apt install sudo -y
     sudo apt install git vim neovim tmux python3 python3-pip tlp jq  -y
     # Linux extras
     sudo apt install util-linux-extra gcc make wget bat mosh eza -y
@@ -133,6 +132,8 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install snapd -y 
+    sudo snap refresh
     sudo apt install guake kitty remmina -y
     sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y
     sudo snap install teams-for-linux   
