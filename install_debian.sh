@@ -262,6 +262,16 @@ f_linux_server_packages() {
     sudo systemctl enable ssh.service
     sudo systemctl start ssh.service
   fi
+  # Fixing zhrc theme
+  FILE="$HOME/.zshrc"
+  SEARCH_STRING='ZSH_THEME="robbyrussell"'
+  REPLACE_STRING='ZSH_THEME="agnoster"'
+  if [ -f "$FILE" ]; then
+    sed -i "s/$SEARCH_STRING/$REPLACE_STRING/g" "$FILE"
+    echo "The theme has been replaced in $FILE."
+  else
+    echo "File $FILE does not exist."
+  fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue}  Installing Docker ${reset}"
   echo "${blue}###############################################################################${reset}"
