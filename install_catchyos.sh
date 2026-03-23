@@ -26,6 +26,7 @@ f_linux_upgrade() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo pacman -Syu
+    paru -Syu --noconfirm
   fi
 }
 
@@ -40,6 +41,7 @@ f_linux_basic_packages() {
     sudo pacman -S git vim neovim tmux python3 tlp jq --noconfirm
     # Linux extras
     sudo pacman -S gcc make wget bat mosh eza --noconfirm
+    sudo pacman -S neofetch --noconfirm
     # ZSH and zsh tools
     sudo pacman -S zsh zsh-syntax-highlighting zsh-autosuggestions --noconfirm
     # Network tools
@@ -232,6 +234,18 @@ f_linux_desktop_packages() {
     gsettings set org.gnome.desktop.background primary-color '#000000'
     gsettings set org.gnome.desktop.background color-shading-type 'solid'   
   fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Power Management Tools (laptops)${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo pacman -S powertop tlp tlp-rdw --noconfirm
+    sudo systemctl mask power-profiles-daemon.service
+    sudo systemctl enable --now tlp.service
+    sudo tlp-stat -s
+  fi
+
 }
 
 f_linux_server_packages() {
