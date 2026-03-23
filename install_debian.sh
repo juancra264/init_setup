@@ -269,6 +269,7 @@ f_linux_server_packages() {
   if [ -f "$FILE" ]; then
     sed -i "s/$SEARCH_STRING/$REPLACE_STRING/g" "$FILE"
     echo "The theme has been replaced in $FILE."
+    source $FILE
   else
     echo "File $FILE does not exist."
   fi
