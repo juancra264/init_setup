@@ -240,10 +240,16 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Installing powertop and tlp
     sudo pacman -S powertop tlp tlp-rdw --noconfirm
     sudo systemctl mask power-profiles-daemon.service
     sudo systemctl enable --now tlp.service
     sudo tlp-stat -s
+    # Enable laptop mode
+    echo 5 | sudo tee /proc/sys/vm/laptop_mode
+    # Enable Auto CPU Frequency Scaling
+    paru -S auto-cpufreq --noconfirm
+    sudo systemctl enable --now auto-cpufreq.service
   fi
 
 }
