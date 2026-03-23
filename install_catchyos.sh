@@ -285,18 +285,14 @@ f_linux_vpns() {
     paru -S forticlient --noconfirm
     sudo systemctl enable --now forticlient.service
   fi
-  #echo "${blue}###############################################################################${reset}"
-  #echo "${blue} Installing ProtonVPN Client${reset}"
-  #echo "${blue}###############################################################################${reset}"
-  #read -r -p "Continue? [y/N]" -n 1
-  #echo # (optional) move to a new line
-  #if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-  #  wget https://repo.protonvpn.com/debian/dists/stable/main/binary-all/protonvpn-stable-release_1.0.8_all.deb
-  #  sudo dpkg -i ./protonvpn-stable-release_1.0.8_all.deb && sudo apt update
-  #  sudo apt install proton-vpn-gnome-desktop -y
-  #  sudo apt install gnome-shell-extension-appindicator -y
-  #  sudo rm -rf ./protonvpn-stable-release_1.0.8_all.deb
-  #fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing ProtonVPN Client${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    pacman -S proton-vpn-cli --noconfirm
+  fi
 }
 
 f_linux_config_apps(){
