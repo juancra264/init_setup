@@ -253,7 +253,7 @@ f_linux_desktop_packages() {
 
 f_linux_server_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Installing SSH server${reset}"
+  echo "${blue}  Installing SSH service${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -262,6 +262,56 @@ f_linux_server_packages() {
     sudo systemctl enable ssh.service
     sudo systemctl start ssh.service
   fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue}  Installing Docker ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install ca-certificates curl gnupg -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    source /etc/os-release
+    if [[ "$ID" == "debian" ]]; then
+      curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      sudo chmod a+r /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null   
+      sudo groupadd docker
+    elif [[ "$ID" == "ubuntu" ]]; then
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+      sudo chmod a+r /etc/apt/keyrings/docker.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null   
+    else
+      echo "${red}###############################################################################${reset}"
+      echo "${red}  THIS IS NO A DEBIAN OR UBUNTU SYSTEM ${reset}"
+      echo "${red}###############################################################################${reset}"
+    fi
+    sudo apt update
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin  
+    sudo systemctl enable --now docker
+    sudo usermod -aG docker ${USER}
+    echo "${red}###############################################################################${reset}"
+    echo "${red} Docker installed${reset}"
+    echo "${red}###############################################################################${reset}"
+    docker --version
+    docker compose version
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue}  Optimize server for Proxmox${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Enable CPU optimizations:
+    sudo apt install qemu-guest-agent -y
+    sudo systemctl enable --now qemu-guest-agent
+    # Tune kernel for containers:
+    echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
+    sudo sysctl -p
+    # Disable unnecessary services:
+    sudo systemctl disable --now multipathd.service
+    sudo systemctl disable --now apport.service
+  fi
+
 }
 
 f_linux_Kali_Packages() {
