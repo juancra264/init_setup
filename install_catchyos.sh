@@ -130,13 +130,20 @@ f_linux_desktop_packages() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo pacman -S guake kitty remmina --noconfirm
     sudo pacman -S freerdp libvncserver --noconfirm
-    sudo pacman -S code --noconfirm
     sudo pacman -S spotify-launcher --noconfirm
     paru -S teams-for-linux --noconfirm 
     paru -S snapd --noconfirm
     sudo systemctl enable --now snapd.socket
     snap install asana-snap
     snap install drawio   
+    # Install yay (if not already installed)
+    sudo pacman -S --needed base-devel git
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si
+    cd ..
+    # Install VS Code
+    yay -S visual-studio-code-bin   
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
