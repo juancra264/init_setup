@@ -25,8 +25,8 @@ f_linux_upgrade() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo pacman -Syu
     paru -Syu --noconfirm
+    sudo pacman -Syu --noconfirm
   fi
 }
 
