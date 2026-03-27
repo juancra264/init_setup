@@ -49,6 +49,7 @@ f_linux_basic_packages() {
     sudo pacman -S picocom --noconfirm
     sudo pacman -S wireshark-qt --noconfirm
     sudo pacman -S mtr --noconfirm
+    sudo pacman -S ipcalc --noconfirm
     # Monitoring tools
     sudo pacman -S ncdu btop glances bmon htop --noconfirm
     # File managers
