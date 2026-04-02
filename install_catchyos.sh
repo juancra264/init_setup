@@ -142,19 +142,15 @@ f_linux_desktop_packages() {
     snap install drawio   
     # Install yay (if not already installed)
     sudo pacman -S --needed base-devel git
-    DIR="$HOME/yay"
-    if [ -d "$DIR" ]; then
-      # Install VS Code
-      yay -S visual-studio-code-bin
-    else
+    if ! command -v yay &> /dev/null; then
       echo "Directory $DIR does not exist."
       git clone https://aur.archlinux.org/yay.git
       cd yay
       makepkg -si
       cd ..
-      # Install VS Code
-      yay -S visual-studio-code-bin
     fi
+    # Install VS Code
+    yay -S visual-studio-code-bin
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
