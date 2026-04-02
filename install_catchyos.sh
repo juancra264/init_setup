@@ -47,7 +47,7 @@ f_linux_basic_packages() {
     # Network tools
     sudo pacman -S curl net-tools dnsutils traceroute nmap iperf3 speedtest-cli --noconfirm
     sudo pacman -S picocom --noconfirm
-    sudo pacman -S wireshark-qt --noconfirm
+    sudo pacman -S wireshark-qt openbsd-netcat n--noconfirm
     sudo pacman -S mtr --noconfirm
     sudo pacman -S ipcalc --noconfirm
     # Monitoring tools
