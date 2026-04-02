@@ -151,6 +151,9 @@ f_linux_desktop_packages() {
     fi
     # Install VS Code
     yay -S visual-studio-code-bin
+    # Install Arduino IDE
+    paru -S arduino-ide-bin --noconfirm
+    sudo usermod -aG dialout,uucp,lock $USER
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
