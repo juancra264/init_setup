@@ -314,7 +314,7 @@ f_linux_vpns() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    pacman -S proton-vpn-cli --noconfirm
+    sudo pacman -S proton-vpn-cli --noconfirm
   fi
 }
 
