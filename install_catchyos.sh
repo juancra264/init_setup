@@ -173,7 +173,7 @@ f_linux_desktop_packages() {
       sudo systemctl enable clamav-freshclam
       sudo systemctl enable --now clamav-daemon
       #clamscan -r /home/$USER
-      curl https://secure.eicar.org/eicar.com.txt | clamscan -
+      #curl https://secure.eicar.org/eicar.com.txt | clamscan -
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Virt Manager${reset}"
