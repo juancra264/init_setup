@@ -318,6 +318,7 @@ f_linux_vpns() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo pacman -S proton-vpn-cli --noconfirm
+    sudo pacman -S proton-vpn-gtk-app --noconfirm
   fi
 }
 
