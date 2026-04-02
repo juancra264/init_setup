@@ -142,12 +142,19 @@ f_linux_desktop_packages() {
     snap install drawio   
     # Install yay (if not already installed)
     sudo pacman -S --needed base-devel git
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    cd ..
-    # Install VS Code
-    yay -S visual-studio-code-bin   
+    DIR="$HOME/yay"
+    if [ -d "$DIR" ]; then
+      # Install VS Code
+      yay -S visual-studio-code-bin
+    else
+      echo "Directory $DIR does not exist."
+      git clone https://aur.archlinux.org/yay.git
+      cd yay
+      makepkg -si
+      cd ..
+      # Install VS Code
+      yay -S visual-studio-code-bin
+    fi
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
@@ -169,7 +176,7 @@ f_linux_desktop_packages() {
       sudo systemctl start clamav-freshclam
       sudo systemctl enable clamav-freshclam
       sudo systemctl enable --now clamav-daemon
-      clamscan -r /home/$USER
+      #clamscan -r /home/$USER
       curl https://secure.eicar.org/eicar.com.txt | clamscan -
   fi
   echo "${blue}###############################################################################${reset}"
