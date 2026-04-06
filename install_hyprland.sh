@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install Hyprland and Essentials:
-sudo pacman -S hyprland waybar wofi rofi mako kitty --noconfirm
+sudo pacman -S hyprland waybar wofi rofi mako kitty hyprpaper --noconfirm
 # CachyOS Settings
 sudo pacman -S cachyos-hyprland-settings --noconfirm
 # Install monitor manager
