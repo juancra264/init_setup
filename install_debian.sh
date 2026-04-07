@@ -122,6 +122,7 @@ f_linux_terminal(){
     echo "${blue}###############################################################################${reset}"
     rm -rf $HOME/.zshrc
     cp $HOME/init_setup/config/zshrc/zshrc $HOME/.zshrc
+    sudo apt install kitty-terminfo
   fi
 }
 
