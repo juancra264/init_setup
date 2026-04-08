@@ -350,6 +350,14 @@ f_linux_config_apps(){
     rm -rf $HOME/.config/kitty/kitty.conf
     mkdir -p $HOME/.config/kitty
     ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
+    
+    # for alacritty config
+    echo "${blue}###############################################################################${reset}"
+    echo "${blue} Configuring alacritty${reset}"
+    echo "${blue}###############################################################################${reset}"
+    rm -rf $HOME/.config/alacritty/alacritty.toml
+    mkdir -p $HOME/.config/alacritty
+    ln -s $HOME/init_setup/config/alacritty/alacritty.toml $HOME/.config/alacritty/alacritty.toml
 
     echo "${blue}###############################################################################${reset}"
     echo "${blue} Installing TMUX pluggings${reset}"
