@@ -33,7 +33,7 @@ fi
 
 # 4. Add to groups (sudo and docker)
 # -aG: appends the user to the specified groups
-usermod -aG sudo,docker "$USER_NAME"
+usermod -aG docker "$USER_NAME"
 echo "User $USER_NAME added to sudo and docker groups."
 #
 ## 5. Prepare SSH directory
