@@ -135,6 +135,7 @@ f_linux_desktop_packages() {
     sudo pacman -S guake kitty remmina --noconfirm
     sudo pacman -S freerdp libvncserver --noconfirm
     sudo pacman -S spotify-launcher --noconfirm
+    sudo pacman -S aws-cli-v2 --noconfirm
     paru -S teams-for-linux --noconfirm 
     paru -S snapd --noconfirm
     sudo systemctl enable --now snapd.socket
