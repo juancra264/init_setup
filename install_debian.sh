@@ -57,7 +57,7 @@ f_linux_basic_packages() {
     # Add current user to dialout group to use the serial interfaces with picocom.
     sudo usermod -a -G dialout "$USER"
     # Installing ntpsec client
-    sudo apt install ntpsec -y
+    /sudo apt install ntpsec -y
     sudo systemctl enable ntpsec.service
     sudo systemctl restart ntpsec.service  
   fi
@@ -72,6 +72,10 @@ f_linux_terminal(){
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     pip3 install --user powerline-status --break-system-packages
     sudo apt install -y fonts-powerline
+    sudo apt install kitty
+    sudo add-apt-repository ppa:aslatter/ppa
+    sudo apt update   
+    sudo apt install alacritty
     # Install Patched Font
     if [ ! -d "$HOME/.fonts" ]; then
       mkdir ~/.fonts
@@ -135,7 +139,7 @@ f_linux_desktop_packages() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install snapd -y 
     sudo snap refresh
-    sudo apt install guake kitty remmina -y
+    sudo apt install remmina -y
     sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y
     sudo snap install teams-for-linux   
     sudo snap install code --classic
