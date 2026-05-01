@@ -30,6 +30,22 @@ f_linux_upgrade() {
   fi
 }
 
+f_linux_cleankeys() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Running a full upgrade${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo pacman-key --refresh-keys
+    sudo rm -rf /etc/pacman.d/gnupg
+    sudo pacman-key --init
+    sudo pacman-key --populate archlinux cachyos
+    sudo pacman -Sc
+    sudo pacman -Syyu
+  fi
+}
+
 f_linux_basic_packages() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing basic packages${reset}"
@@ -383,6 +399,7 @@ f_linux_config_apps(){
 f_linux_install_app() {
   # General Linux installation server and desktop
   f_linux_upgrade
+  f_linux_cleankeys
   f_linux_basic_packages
   f_linux_terminal
   echo "${blue}###############################################################################${reset}"
