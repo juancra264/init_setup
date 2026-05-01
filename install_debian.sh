@@ -447,6 +447,18 @@ f_linux_Kali_Packages() {
   fi  
 }
 
+f_linux_nx() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing NoMachine NX client${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+  	wget -P $HOME https://web9001.nomachine.com/download/9.4/Linux/nomachine_9.4.14_1_amd64.deb
+    sudo dpkg -i $HOME/nomachine_9.4.14_1_amd64.deb
+  fi
+}
+
 f_linux_vpns() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Netbird client${reset}"
@@ -565,7 +577,8 @@ f_linux_install_app() {
     f_linux_vpns
   fi
   f_linux_config_apps
-  
+  f_linux_nx
+
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
 }
