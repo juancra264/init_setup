@@ -131,6 +131,8 @@ alias macadd="bash ~/nettools/macadd/macadd.sh"
 alias checknet="bash ~/nettools/checknet/checknet.sh"
 alias ipaddinfo="bash ~/nettools/ipaddinfo/ipaddinfo.sh"
 alias where="bash ~/nettools/where/where.sh"
+alias notification_reset="bash ~/nettools/linux/notification_reset.sh"
+alias vpn_reset="bash ~/nettools/linux/vpn_reset.sh"
 
 # Serial shortcuts
 alias serial0="picocom -b 9600 -r -l /dev/ttyUSB0"
