@@ -57,7 +57,7 @@ f_linux_basic_packages() {
     # Add current user to dialout group to use the serial interfaces with picocom.
     sudo usermod -a -G dialout "$USER"
     # Installing ntpsec client
-    /sudo apt install ntpsec -y
+    sudo apt install ntpsec -y
     sudo systemctl enable ntpsec.service
     sudo systemctl restart ntpsec.service  
   fi
