@@ -129,7 +129,7 @@ f_linux_terminal(){
 
 f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Apps${reset}"
+  echo "${blue} Installing Apps (remmina, teams, code, asana-snap, spotify, drawio)${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
