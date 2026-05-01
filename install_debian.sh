@@ -72,10 +72,10 @@ f_linux_terminal(){
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     pip3 install --user powerline-status --break-system-packages
     sudo apt install -y fonts-powerline
-    sudo apt install kitty
+    sudo apt install -y kitty
     sudo add-apt-repository ppa:aslatter/ppa
     sudo apt update   
-    sudo apt install alacritty
+    sudo apt install -y alacritty
     # Install Patched Font
     if [ ! -d "$HOME/.fonts" ]; then
       mkdir ~/.fonts
