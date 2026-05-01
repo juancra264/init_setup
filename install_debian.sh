@@ -456,6 +456,7 @@ f_linux_nx() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
   	wget -P $HOME https://web9001.nomachine.com/download/9.4/Linux/nomachine_9.4.14_1_amd64.deb
     sudo dpkg -i $HOME/nomachine_9.4.14_1_amd64.deb
+    rm -rf $HOME/nomachine_9.4.14_1_amd64.deb
   fi
 }
 
