@@ -32,7 +32,7 @@ f_linux_upgrade() {
 
 f_linux_cleankeys() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Running a full upgrade${reset}"
+  echo "${blue} Running cleankeys{reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
