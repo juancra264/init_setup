@@ -330,14 +330,11 @@ f_linux_server_packages() {
     docker compose version
   fi
   echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Optimize server for Proxmox${reset}"
+  echo "${blue}  Optimize server for Containers${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    # Enable CPU optimizations:
-    sudo apt install qemu-guest-agent -y
-    sudo systemctl enable --now qemu-guest-agent
     # Tune kernel for containers:
     echo "net.ipv4.ip_forward=1" | sudo tee -a /etc/sysctl.conf
     sudo sysctl -p
