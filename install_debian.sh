@@ -35,7 +35,7 @@ f_linux_upgrade() {
 
 f_linux_basic_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing basic packages${reset}"
+  echo "${blue} Installing basic packages (vim, zsh tools, filezilla, ntpsec, etc) ${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -60,6 +60,16 @@ f_linux_basic_packages() {
     sudo apt install ntpsec -y
     sudo systemctl enable ntpsec.service
     sudo systemctl restart ntpsec.service  
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue}  Installing qemu-guest-agent${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    # Enable CPU optimizations:
+    sudo apt install qemu-guest-agent -y
+    sudo systemctl enable --now qemu-guest-agent
   fi
 }
 
@@ -141,7 +151,6 @@ f_linux_desktop_packages() {
     sudo snap install teams-for-linux   
     sudo snap install code --classic
     sudo snap install asana-snap
-    sudo snap install spotify
     sudo snap install drawio   
   fi
   echo "${blue}###############################################################################${reset}"
@@ -172,6 +181,7 @@ f_linux_desktop_packages() {
       echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
       sudo apt-get update 
       sudo apt-get install spotify-client -y
+      sudo snap install spotify
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing yubi authenticator${reset}"
@@ -191,7 +201,7 @@ f_linux_desktop_packages() {
   fi
   # GNOME Shell extension cli
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing tweaks packages ${reset}"
+  echo "${blue} Installing tweaks packages for GNOME ${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -223,7 +233,7 @@ f_linux_desktop_packages() {
   fi
   # Configuring shortcuts
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring shortcuts ${reset}"
+  echo "${blue} Configuring shortcuts for Gnome ${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -242,7 +252,7 @@ f_linux_desktop_packages() {
   fi
   # Configuring Tweeking desktop settings
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Tweaking desktop settings ${reset}"
+  echo "${blue} Tweaking desktop settings for GNOME ${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
