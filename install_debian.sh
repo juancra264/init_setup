@@ -139,19 +139,26 @@ f_linux_terminal(){
 
 f_linux_desktop_packages() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Apps (remmina, teams, code, asana-snap, spotify, drawio)${reset}"
+  echo "${blue} Installing Remmina ${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install remmina -y
+    sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y  
+  fi
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing teams, Code, asana and drawio using snap${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install snapd -y 
     sudo snap refresh
-    sudo apt install remmina -y
-    sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y
     sudo snap install teams-for-linux   
     sudo snap install code --classic
     sudo snap install asana-snap
-    sudo snap install drawio   
+    sudo snap install drawio 
   fi
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Brave${reset}"
@@ -467,6 +474,23 @@ f_linux_nx() {
   fi
 }
 
+f_linux_antigravity() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing Google Antigravity IDE${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo mkdir -p /etc/apt/keyrings
+    curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | \
+      sudo gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" | \
+      sudo tee /etc/apt/sources.list.d/antigravity.list > /dev/null
+    sudo apt update
+    sudo apt install antigravity -y
+  fi
+}
+
 f_linux_vpns() {
   echo "${blue}###############################################################################${reset}"
   echo "${blue} Installing Netbird client${reset}"
@@ -586,6 +610,7 @@ f_linux_install_app() {
   fi
   f_linux_config_apps
   f_linux_nx
+  f_linux_antigravity
 
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
