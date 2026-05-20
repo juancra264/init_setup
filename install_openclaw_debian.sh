@@ -51,8 +51,8 @@ apt install -y \
   ca-certificates \
   gnupg \
   lsb-release \
-  #software-properties-common \
   ufw
+  #software-properties-common \
 success "Base dependencies installed."
 
 # ─────────────────────────────────────────────────────────────
