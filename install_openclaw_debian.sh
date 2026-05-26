@@ -104,7 +104,8 @@ export NVM_DIR="${HOME}/.nvm"
 source "${NVM_DIR}/nvm.sh"
 
 # Install via official script
-curl -fsSL https://openclaw.ai/install.sh | bash
+#curl -fsSL https://openclaw.ai/install.sh | bash
+npm install -g openclaw-agent-gateway
 
 # Verify install
 openclaw --version || echo "Note: run 'openclaw onboard' to complete setup."
