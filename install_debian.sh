@@ -474,20 +474,30 @@ f_linux_nx() {
   fi
 }
 
-f_linux_antigravity() {
+f_linux_antigravity-cli() {
   echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Google Antigravity IDE${reset}"
+  echo "${blue} Installing Google Antigravity CLI${reset}"
   echo "${blue}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo mkdir -p /etc/apt/keyrings
-    curl -fsSL https://us-central1-apt.pkg.dev/doc/repo-signing-key.gpg | \
-      sudo gpg --dearmor --yes -o /etc/apt/keyrings/antigravity-repo-key.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/antigravity-repo-key.gpg] https://us-central1-apt.pkg.dev/projects/antigravity-auto-updater-dev/ antigravity-debian main" | \
-      sudo tee /etc/apt/sources.list.d/antigravity.list > /dev/null
+    curl -fsSL https://antigravity.google/cli/install.sh | bash
+  fi
+}
+
+f_linux_vscode() {
+  echo "${blue}###############################################################################${reset}"
+  echo "${blue} Installing VS Code${reset}"
+  echo "${blue}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo apt install software-properties-common apt-transport-https wget -y
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg 
+    sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+    sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     sudo apt update
-    sudo apt install antigravity -y
+    sudo apt install code
   fi
 }
 
@@ -610,7 +620,8 @@ f_linux_install_app() {
   fi
   f_linux_config_apps
   f_linux_nx
-  f_linux_antigravity
+  f_linux_vscode
+  f_linux_antigravity-cli
 
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
