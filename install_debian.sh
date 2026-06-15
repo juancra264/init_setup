@@ -481,7 +481,7 @@ f_linux_antigravity() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    echo -e "${green}=== Starting Google Antigravity 2.0 Installation for Lubuntu 26.04 ===${NC}"
+    echo -e "${green}=== Starting Google Antigravity 2.0 Installation ===${NC}"
     # 1. Clean up legacy 1.x installations to avoid redirect loops
     echo -e "${green}[1/5] Checking and cleaning up legacy 1.x installations...${NC}"
     if dpkg -l | grep -q "^ii  antigravity "; then
@@ -544,26 +544,29 @@ f_linux_antigravity() {
     fi
     # 5. Create Desktop Launcher (LXQt Integration)
     echo -e "${green}[5/5] Creating Desktop Launcher...${NC}"
+    
     LAUNCHER_PATH="$HOME/.local/share/applications/google-antigravity.desktop"
     # By default, we launch with --no-sandbox to handle Ubuntu 24.04/26.04 user namespace restrictions.
-    cat <<EOF > "$LAUNCHER_PATH"
-    [Desktop Entry]
-    Name=Google Antigravity
-    Comment=Agentic Development Platform
-    Exec="$INSTALL_DIR/antigravity" --no-sandbox %U
-    Icon=$INSTALL_DIR/resources/app/assets/icon.png
-    Terminal=false
-    Type=Application
-    Categories=Development;IDE;
-    MimeType=x-scheme-handler/antigravity;
-    EOF
+cat <<EOF > "$LAUNCHER_PATH"
+[Desktop Entry]
+Name=Google Antigravity
+Comment=Agentic Development Platform
+Exec="$INSTALL_DIR/antigravity" --no-sandbox %U
+Icon=$INSTALL_DIR/resources/app/assets/icon.png
+Terminal=false
+Type=Application
+Categories=Development;IDE;
+MimeType=x-scheme-handler/antigravity;
+EOF
     # Find dynamic icon fallback if the default assets folder differs
     ICON_FIND=$(find "$INSTALL_DIR" -name "*.png" -o -name "*.svg" | head -n 1)
     if [ -n "$ICON_FIND" ]; then
         sed -i "s|Icon=.*|Icon=$ICON_FIND|" "$LAUNCHER_PATH"
     fi
+    
     chmod +x "$LAUNCHER_PATH"
     update-desktop-database "$HOME/.local/share/applications"
+    
     echo -e "${GREEN}=== Installation Completed Successfully! ===${NC}"
     echo -e "You can launch Google Antigravity from the Lubuntu Application Menu (under Development)."
     echo -e "Or run it from the terminal using:"
