@@ -468,9 +468,9 @@ f_linux_nx() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-  	wget -P $HOME https://web9001.nomachine.com/download/9.6/Linux/nomachine_9.6.3_1_x86_64.rpm
-    sudo dpkg -i $HOME/nomachine_9.6.3_1_x86_64.rpm
-    rm -rf $HOME/nomachine_9.6.3_1_x86_64.rpm
+  	wget -P $HOME https://web9001.nomachine.com/download/9.6/Linux/nomachine_9.6.3_1_amd64.deb  
+    sudo dpkg -i $HOME/nomachine_9.6.3_1_amd64.deb
+    rm -rf $HOME/nomachine_9.6.3_1_amd64.deb
   fi
 }
 
