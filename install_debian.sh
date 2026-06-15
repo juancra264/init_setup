@@ -19,9 +19,9 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 # ## Functions Declarations
 # #############################################################################
 f_linux_upgrade() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Running a full upgrade${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Running a full upgrade${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -34,9 +34,9 @@ f_linux_upgrade() {
 }
 
 f_linux_basic_packages() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing basic packages (vim, zsh tools, filezilla, ntpsec, etc) ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing basic packages (vim, zsh tools, filezilla, ntpsec, etc) ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -61,9 +61,9 @@ f_linux_basic_packages() {
     sudo systemctl enable ntpsec.service
     sudo systemctl restart ntpsec.service  
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Installing qemu-guest-agent${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green}  Installing qemu-guest-agent${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -74,9 +74,9 @@ f_linux_basic_packages() {
 }
 
 f_linux_terminal(){
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Terminal packages ( zsh oh-my-zsh powerline) ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Terminal packages ( zsh oh-my-zsh powerline) ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -94,29 +94,29 @@ f_linux_terminal(){
       sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     fi
     # Install zsh plugins
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${green}###############################################################################${reset}"
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
       git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     fi
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${green}###############################################################################${reset}"
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
       git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     fi
     # Install powerlevel10k
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${green}###############################################################################${reset}"
     if [ ! -d "$HOME/powerlevel10k" ]; then
       git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/powerlevel10k
     fi
     # Install nettools
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
+    echo "${green}###############################################################################${reset}"
     if [ ! -d "$HOME/nettools" ]; then
       git clone https://github.com/juancra264/nettools.git $HOME/nettools
     else
@@ -128,9 +128,9 @@ f_linux_terminal(){
     # Switch the shell.
     chsh -s $(which zsh)
     # Copy zshrc config
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Configuring zshrc${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring zshrc${reset}"
+    echo "${green}###############################################################################${reset}"
     rm -rf $HOME/.zshrc
     cp $HOME/init_setup/config/zshrc/zshrc $HOME/.zshrc
     sudo apt install kitty-terminfo
@@ -138,18 +138,18 @@ f_linux_terminal(){
 }
 
 f_linux_desktop_packages() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Remmina ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Remmina ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install remmina -y
     sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y  
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing teams, Code, asana and drawio using snap${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing teams, Code, asana and drawio using snap${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -160,26 +160,26 @@ f_linux_desktop_packages() {
     sudo snap install asana-snap
     sudo snap install drawio 
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Brave${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Brave${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       sudo curl -fsS https://dl.brave.com/install.sh | sh
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Virt Manager${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Virt Manager${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install qemu-kvm libvirt-daemon-system virt-manager -y
     sudo usermod -aG libvirt $USER
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Spotify${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Spotify${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -190,26 +190,26 @@ f_linux_desktop_packages() {
       sudo apt-get install spotify-client -y
       sudo snap install spotify
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing yubi authenticator${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing yubi authenticator${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install yubioath-desktop -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing GPS tools${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing GPS tools${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install gpsd gpsd-clients libgps-dev -y
   fi
   # GNOME Shell extension cli
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing tweaks packages for GNOME ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing tweaks packages for GNOME ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -230,18 +230,18 @@ f_linux_desktop_packages() {
     gnome-extensions list --enabled
   fi
   # Remove the the Gnome dock
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Remove Gnome dock ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Remove Gnome dock ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt remove gnome-shell-extension-ubuntu-dock -y
   fi
   # Configuring shortcuts
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Configuring shortcuts for Gnome ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Configuring shortcuts for Gnome ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -258,9 +258,9 @@ f_linux_desktop_packages() {
     gsettings set org.gnome.desktop.wm.keybindings close "['<Alt>q']"
   fi
   # Configuring Tweeking desktop settings
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Tweaking desktop settings for GNOME ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Tweaking desktop settings for GNOME ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -271,9 +271,9 @@ f_linux_desktop_packages() {
 }
 
 f_linux_server_packages() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Installing SSH service${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green}  Installing SSH service${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -291,9 +291,9 @@ f_linux_server_packages() {
   else
     echo "File $FILE does not exist."
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Installing Docker ${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green}  Installing Docker ${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -336,9 +336,9 @@ f_linux_server_packages() {
     docker --version
     docker compose version
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue}  Optimize server for Containers${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green}  Optimize server for Containers${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -357,18 +357,18 @@ f_linux_server_packages() {
 }
 
 f_linux_Kali_Packages() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Kali Packages${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Kali Packages${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install hcxtools tilix maltego burpsuite -y 
     sudo apt install hydra beef-xss nikto wavemon -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Wireless Tools${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Wireless Tools${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -377,9 +377,9 @@ f_linux_Kali_Packages() {
     sudo apt install aircrack-ng -y
     sudo apt install wifite -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing RTL8812AU/21AU and RTL8814AU Wireless drivers${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing RTL8812AU/21AU and RTL8814AU Wireless drivers${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -397,9 +397,9 @@ f_linux_Kali_Packages() {
     sudo cp rtw88.conf /etc/modprobe.d/
     cd $SCRIPT_DIR
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing bluetooth manager${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing bluetooth manager${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -407,21 +407,21 @@ f_linux_Kali_Packages() {
     sudo systemctl enable bluetooth.service
     sudo systemctl start bluetooth.service
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Compiling kismet${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Compiling kismet${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Setting repo for kismet ${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Setting repo for kismet ${reset}"
+    echo "${green}###############################################################################${reset}"
     wget -O - https://www.kismetwireless.net/repos/kismet-release.gpg.key --quiet | gpg --dearmor | sudo tee /usr/share/keyrings/kismet-archive-keyring.gpg >/dev/null
     echo 'deb [signed-by=/usr/share/keyrings/kismet-archive-keyring.gpg] https://www.kismetwireless.net/repos/apt/release/noble noble main' | sudo tee /etc/apt/sources.list.d/kismet.list >/dev/null
     sudo apt-get update
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing dependencies for kismet${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing dependencies for kismet${reset}"
+    echo "${green}###############################################################################${reset}"
     sudo apt install build-essential libwebsockets-dev pkg-config zlib1g-dev -y
     sudo apt install libnl-3-dev libnl-genl-3-dev libcap-dev libpcap-dev libnm-dev -y 
     sudo apt install libdw-dev libsqlite3-dev libprotobuf-dev libprotobuf-c-dev -y 
@@ -431,21 +431,21 @@ f_linux_Kali_Packages() {
     sudo apt install python3-numpy python3-serial python3-usb python3-dev python3-paho-mqtt -y 
     sudo apt install python3-websockets libubertooth-dev libbtbb-dev -y
 
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing GQRX${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing GQRX${reset}"
+    echo "${green}###############################################################################${reset}"
     sudo apt-get install software-properties-common
     sudo apt-get install python3-launchpadlib
     sudo apt-get install gqrx-sdr -y
 
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing GQRX${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing GQRX${reset}"
+    echo "${green}###############################################################################${reset}"
     sudo apt install kismet -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Metasploit suite${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Metasploit suite${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -462,9 +462,9 @@ f_linux_Kali_Packages() {
 }
 
 f_linux_nx() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing NoMachine NX client${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing NoMachine NX client${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -475,9 +475,9 @@ f_linux_nx() {
 }
 
 f_linux_antigravity-cli() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Google Antigravity CLI${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Google Antigravity CLI${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -486,9 +486,9 @@ f_linux_antigravity-cli() {
 }
 
 f_linux_vscode() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing VS Code${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing VS Code${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -497,14 +497,14 @@ f_linux_vscode() {
     sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
     sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     sudo apt update
-    sudo apt install code
+    sudo apt install code -y
   fi
 }
 
 f_linux_vpns() {
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Netbird client${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Netbird client${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -515,9 +515,9 @@ f_linux_vpns() {
     sudo apt-get install netbird -y
     sudo apt-get install netbird-ui -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Forticlient${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Forticlient${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -526,9 +526,9 @@ f_linux_vpns() {
     sudo apt update   
     sudo apt install forticlient -y
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing ProtonVPN Client${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing ProtonVPN Client${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -541,46 +541,46 @@ f_linux_vpns() {
 }
 
 f_linux_config_apps(){
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Copying Configuration Files (vim, tmux, kitty, git)${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Copying Configuration Files (vim, tmux, kitty, git)${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # for vim
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Configuring VIM${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring VIM${reset}"
+    echo "${green}###############################################################################${reset}"
     rm -rf $HOME/.vimrc
     ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
 
     # for tmux
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Configuring TMUX${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring TMUX${reset}"
+    echo "${green}###############################################################################${reset}"
     rm -rf $HOME/.tmux.conf
     ln -s $HOME/init_setup/config/tmux/tmux.conf $HOME/.tmux.conf
 
     # for kitty config
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Configuring KITTY${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring KITTY${reset}"
+    echo "${green}###############################################################################${reset}"
     rm -rf $HOME/.config/kitty/kitty.conf
     mkdir -p $HOME/.config/kitty
     ln -s $HOME/init_setup/config/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
 
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Installing TMUX pluggings${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing TMUX pluggings${reset}"
+    echo "${green}###############################################################################${reset}"
     # Plugin Manager - https://github.com/tmux-plugins/tpm
     # If you didn't use my dotfiles install script you'll need to:
     rm -rf ~/.tmux/plugins/tpm
     git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
     # for git config
-    echo "${blue}###############################################################################${reset}"
-    echo "${blue} Configuring Git${reset}"
-    echo "${blue}###############################################################################${reset}"
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring Git${reset}"
+    echo "${green}###############################################################################${reset}"
     rm -rf $HOME/.gitconfig
     ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
     git config --global user.name "juancra264"
@@ -594,25 +594,25 @@ f_linux_install_app() {
   f_linux_upgrade
   f_linux_basic_packages
   f_linux_terminal
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Desktop Packages${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Desktop Packages${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     f_linux_desktop_packages  
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing Server Packages${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Server Packages${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     f_linux_server_packages  
   fi
-  echo "${blue}###############################################################################${reset}"
-  echo "${blue} Installing VPNs clients${reset}"
-  echo "${blue}###############################################################################${reset}"
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing VPNs clients${reset}"
+  echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
