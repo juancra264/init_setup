@@ -474,14 +474,112 @@ f_linux_nx() {
   fi
 }
 
-f_linux_antigravity-cli() {
+f_linux_antigravity() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing Google Antigravity CLI${reset}"
+  echo "${green} Installing Google Antigravity${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    echo -e "${green}=== Starting Google Antigravity 2.0 Installation for Lubuntu 26.04 ===${NC}"
+    # 1. Clean up legacy 1.x installations to avoid redirect loops
+    echo -e "${green}[1/5] Checking and cleaning up legacy 1.x installations...${NC}"
+    if dpkg -l | grep -q "^ii  antigravity "; then
+        echo "Found legacy antigravity apt package. Purging to prevent conflict loops..."
+        sudo apt purge -y antigravity
+    fi
+    sudo rm -f /usr/share/applications/antigravity.desktop
+    sudo rm -f /etc/apt/sources.list.d/antigravity.list
+    # 2. Verify dependencies
+    echo -e "${green}[2/5] Checking system dependencies...${NC}"
+    DEPS=(curl wget tar xdg-utils desktop-file-utils)
+    MISSING_DEPS=()
+    for dep in "${DEPS[@]}"; do
+        if ! command -v "$dep" &> /dev/null; then
+            MISSING_DEPS+=("$dep")
+        fi
+    done
+    if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
+        echo "Installing missing dependencies: ${MISSING_DEPS[*]}"
+        sudo apt update
+        sudo apt install -y "${MISSING_DEPS[@]}"
+    else
+        echo "All basic dependencies met."
+    fi
+    # Install common system library dependencies needed by Electron runtimes
+    echo "Installing common libraries required by Electron..."
+    sudo apt install -y libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2t64
+    # 3. Install Antigravity CLI (agy)
+    echo -e "${green}[3/5] Installing Antigravity CLI (agy)...${NC}"
     curl -fsSL https://antigravity.google/cli/install.sh | bash
+    # 4. Install Antigravity 2.0 Desktop Application
+    echo -e "${green}[4/5] Installing Antigravity 2.0 Desktop App...${NC}"
+    INSTALL_DIR="$HOME/.local/share/antigravity"
+    mkdir -p "$INSTALL_DIR"
+    # Detect architecture
+    ARCH=$(uname -m)
+    if [ "$ARCH" = "x86_64" ]; then
+        DOWNLOAD_URL="https://antigravity.google/download/linux/x64/antigravity-desktop-latest.tar.gz"
+    elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        DOWNLOAD_URL="https://antigravity.google/download/linux/arm64/antigravity-desktop-latest.tar.gz"
+    else
+        echo -e "${RED}Unsupported architecture: $ARCH${NC}"
+        exit 1
+    fi
+    echo "Downloading from $DOWNLOAD_URL..."
+    TMP_TAR=$(mktemp /tmp/antigravity-XXXXXX.tar.gz)
+    if wget -O "$TMP_TAR" "$DOWNLOAD_URL"; then
+        echo "Extracting to $INSTALL_DIR..."
+        tar -xzf "$TMP_TAR" -C "$INSTALL_DIR" --strip-components=1
+        rm -f "$TMP_TAR"
+    else
+        echo -e "${RED}Failed to download the desktop package. Please ensure the link is reachable.${NC}"
+        rm -f "$TMP_TAR"
+        exit 1
+    fi
+    # Make binaries executable
+    chmod +x "$INSTALL_DIR/antigravity"
+    if [ -f "$INSTALL_DIR/chrome-sandbox" ]; then
+        chmod +x "$INSTALL_DIR/chrome-sandbox"
+    fi
+    # 5. Create Desktop Launcher (LXQt Integration)
+    echo -e "${green}[5/5] Creating Desktop Launcher...${NC}"
+    LAUNCHER_PATH="$HOME/.local/share/applications/google-antigravity.desktop"
+    # By default, we launch with --no-sandbox to handle Ubuntu 24.04/26.04 user namespace restrictions.
+    cat <<EOF > "$LAUNCHER_PATH"
+    [Desktop Entry]
+    Name=Google Antigravity
+    Comment=Agentic Development Platform
+    Exec="$INSTALL_DIR/antigravity" --no-sandbox %U
+    Icon=$INSTALL_DIR/resources/app/assets/icon.png
+    Terminal=false
+    Type=Application
+    Categories=Development;IDE;
+    MimeType=x-scheme-handler/antigravity;
+    EOF
+    # Find dynamic icon fallback if the default assets folder differs
+    ICON_FIND=$(find "$INSTALL_DIR" -name "*.png" -o -name "*.svg" | head -n 1)
+    if [ -n "$ICON_FIND" ]; then
+        sed -i "s|Icon=.*|Icon=$ICON_FIND|" "$LAUNCHER_PATH"
+    fi
+    chmod +x "$LAUNCHER_PATH"
+    update-desktop-database "$HOME/.local/share/applications"
+    echo -e "${GREEN}=== Installation Completed Successfully! ===${NC}"
+    echo -e "You can launch Google Antigravity from the Lubuntu Application Menu (under Development)."
+    echo -e "Or run it from the terminal using:"
+    echo -e "  $INSTALL_DIR/antigravity --no-sandbox"
+    echo -e ""
+    echo -e "To initialize the CLI, reload your shell and log in:"
+    echo -e "  source ~/.bashrc"
+    echo -e "  agy auth login"
+    echo -e ""
+    echo -e "${green}NOTE regarding Ubuntu/Lubuntu 26.04 Sandboxing:${NC}"
+    echo -e "The launcher uses '--no-sandbox' because Ubuntu 26.04 restricts unprivileged user namespaces."
+    echo -e "If you prefer running with the sandbox enabled, allow user namespaces system-wide:"
+    echo -e "  sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0"
+    echo -e "To make this configuration persistent across reboots, run:"
+    echo -e "  echo 'kernel.apparmor_restrict_unprivileged_userns = 0' | sudo tee /etc/sysctl.d/60-apparmor-namespace.conf"
+    echo -e "Then, you can remove '--no-sandbox' from $LAUNCHER_PATH."
   fi
 }
 
@@ -621,7 +719,7 @@ f_linux_install_app() {
   f_linux_config_apps
   f_linux_nx
   f_linux_vscode
-  f_linux_antigravity-cli
+  f_linux_antigravity
 
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
