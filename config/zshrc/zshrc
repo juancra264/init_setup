@@ -121,6 +121,7 @@ source ~/powerlevel10k/powerlevel10k.zsh-theme
 # System shortcuts
 alias python="python3"
 alias ls="eza"
+alias cat="batcat"
 alias ws_start="tmux has-session -t ws 2>/dev/null || tmux new-session -d -s ws"
 alias ws="tmux a -t ws"
 
