@@ -474,6 +474,19 @@ f_linux_nx() {
   fi
 }
 
+f_linux_arduinoIDEv2() {
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing ArduinoIDEv2{reset}"
+  echo "${green}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo add-apt-repository universe
+    sudo apt install libfuse2
+    
+  fi
+}
+
 f_linux_antigravity() {
   echo "${green}###############################################################################${reset}"
   echo "${green} Installing Google Antigravity${reset}"
@@ -723,7 +736,7 @@ f_linux_install_app() {
   f_linux_config_apps
   f_linux_nx
   f_linux_vscode
-  f_linux_antigravity
+  ##f_linux_antigravity
 
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
