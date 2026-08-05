@@ -539,6 +539,7 @@ f_linux_kernel7() {
     echo "deb http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware" | sudo tee /etc/apt/sources.list.d/trixie-backports.list
     sudo apt update
     sudo apt install -t trixie-backports linux-image-amd64 linux-headers-amd64
+    sudo apt autoremove -y
   fi
 }
 
