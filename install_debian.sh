@@ -487,6 +487,20 @@ f_linux_arduinoIDEv2() {
   fi
 }
 
+f_linux_kernel7() {
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing linux kernel 7${reset}"
+  echo "${green}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    echo "deb http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware" | sudo tee /etc/apt/sources.list.d/trixie-backports.list
+    sudo apt update
+    sudo apt install -t trixie-backports linux-image-amd64 linux-headers-amd64
+  fi
+}
+
+
 f_linux_antigravity() {
   echo "${green}###############################################################################${reset}"
   echo "${green} Installing Google Antigravity${reset}"
@@ -737,6 +751,8 @@ f_linux_install_app() {
   f_linux_nx
   f_linux_vscode
   ##f_linux_antigravity
+  f_linux_arduinoIDEv2
+  f_linux_kernel7
 
   # adjust the timezone to chicago
   sudo timedatectl set-timezone America/Chicago 
