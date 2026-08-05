@@ -476,14 +476,14 @@ f_linux_nx() {
 
 f_linux_arduinoIDEv2() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing ArduinoIDEv2 ${reset}"
+  echo "${green} Installing ArduinoIDEv2 and Arduino CLI ${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Add contrib and non-free to existing Debian sources
     sudo apt install libfuse2 libfuse2t64 libnss3 libasound2t64 udev
-
+    BIN_DIR="${HOME}/.local/bin"
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
       | BINDIR="${BIN_DIR}" sh
     if ! echo "${PATH}" | grep -q "${BIN_DIR}"; then
