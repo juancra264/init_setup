@@ -476,20 +476,62 @@ f_linux_nx() {
 
 f_linux_arduinoIDEv2() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing ArduinoIDEv2{reset}"
+  echo "${green} Installing ArduinoIDEv2 ${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo add-apt-repository universe
-    sudo apt install libfuse2
+    # Add contrib and non-free to existing Debian sources
+    sudo apt install libfuse2 libfuse2t64 libnss3 libasound2t64 udev
+
+    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
+      | BINDIR="${BIN_DIR}" sh
+    if ! echo "${PATH}" | grep -q "${BIN_DIR}"; then
+      SHELL_RC="${HOME}/.bashrc"
+      [[ -n "${ZSH_VERSION:-}" ]] && SHELL_RC="${HOME}/.zshrc"
+      if ! grep -qs "${BIN_DIR}" "${SHELL_RC}"; then
+        echo "export PATH=\"${BIN_DIR}:\$PATH\"" >> "${SHELL_RC}"
+        echo "Added ${BIN_DIR} to PATH in ${SHELL_RC} (restart your shell or 'source' it)."
+      fi
+      export PATH="${BIN_DIR}:${PATH}"
+    fi
+    arduino-cli config init --overwrite
+    arduino-cli core update-index
+  
+    LATEST_APPIMAGE_URL=$(curl -s https://api.github.com/repos/arduino/arduino-ide/releases/latest | \
+      jq -r '.assets[] | select(.name | test("Linux_64bit.AppImage$")) | .browser_download_url')
     
+    APPIMAGE_PATH="$APP_DIR/arduino-ide.AppImage"
+    
+    echo "==> Downloading Arduino IDE v2..."
+    curl -fsSL -o "$APPIMAGE_PATH" "$LATEST_APPIMAGE_URL"
+    chmod +x "$APPIMAGE_PATH"
+    
+    # Create a symlink in ~/.local/bin for terminal execution
+    ln -sf "$APPIMAGE_PATH" "$BIN_DIR/arduino-ide"
+    
+    # 4. Create Desktop Launcher (.desktop file)
+    echo "==> Creating Desktop Entry..."
+    cat <<EOF > "$DESKTOP_DIR/arduino-ide.desktop"
+[Desktop Entry]
+Type=Application
+Name=Arduino IDE 2
+Comment=Arduino IDE v2 Development Environment
+Exec=$APPIMAGE_PATH %U
+Icon=arduino-ide
+Categories=Development;IDE;
+Terminal=false
+StartupWMClass=Arduino IDE
+EOF
+    if ! groups "$USER" | grep &>/dev/null '\bdialout\b'; then
+      sudo usermod -aG dialout "$USER"
+    fi
   fi
 }
 
 f_linux_kernel7() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing linux kernel 7${reset}"
+  echo "${green} Installing Linux kernel 7 ${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -503,7 +545,7 @@ f_linux_kernel7() {
 
 f_linux_antigravity() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing Google Antigravity${reset}"
+  echo "${green} Installing Google Antigravity ${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
@@ -615,7 +657,7 @@ EOF
 
 f_linux_vscode() {
   echo "${green}###############################################################################${reset}"
-  echo "${green} Installing VS Code${reset}"
+  echo "${green} Installing VS Code ${reset}"
   echo "${green}###############################################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
