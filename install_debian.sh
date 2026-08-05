@@ -483,7 +483,10 @@ f_linux_arduinoIDEv2() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Add contrib and non-free to existing Debian sources
     sudo apt install libfuse2 libfuse2t64 libnss3 libasound2t64 udev
-    BIN_DIR="${HOME}/.local/bin"
+    BIN_DIR="$HOME/.local/bin"
+    APP_DIR="$HOME/Applications"
+    DESKTOP_DIR="$HOME/.local/share/applications"
+    mkdir -p "$BIN_DIR" "$APP_DIR" "$DESKTOP_DIR"
     curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
       | BINDIR="${BIN_DIR}" sh
     if ! echo "${PATH}" | grep -q "${BIN_DIR}"; then
