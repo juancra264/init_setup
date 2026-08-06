@@ -13,3 +13,8 @@ set laststatus=2
 set t_Co=256
 " Always show the command as it is being typed.
 set showcmd
+" Disable backup files (the ~ files)
+set nobackup
+set nowritebackup
+" Disable persistent undo (the .un~ files)
+set noundofile
