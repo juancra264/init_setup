@@ -39,6 +39,4 @@ echo 'eval "$(starship init zsh)"' >> ~/.zshrc
 rm -rf $HOME/.config/starship.toml
 ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
 
-# 7. Apply changes.
-source ~/.zshrc
 
