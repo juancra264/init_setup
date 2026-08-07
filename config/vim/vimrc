@@ -1,4 +1,5 @@
 syntax on
+highlight Comment ctermfg=Cyan
 set ignorecase
 set smartcase
 set hlsearch
