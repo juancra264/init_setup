@@ -106,13 +106,6 @@ f_linux_terminal(){
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
       git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     fi
-    # Install powerlevel10k
-    echo "${green}###############################################################################${reset}"
-    echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${green}###############################################################################${reset}"
-    if [ ! -d "$HOME/powerlevel10k" ]; then
-      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/powerlevel10k
-    fi
     # Install nettools
     echo "${green}###############################################################################${reset}"
     echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
@@ -134,6 +127,18 @@ f_linux_terminal(){
     rm -rf $HOME/.zshrc
     cp $HOME/init_setup/config/zshrc/zshrc $HOME/.zshrc
     sudo apt install kitty-terminfo
+    
+    # Install starship 
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Installing starship ${reset}"
+    echo "${green}###############################################################################${reset}"
+    if command -v starship &> /dev/null; then
+        echo "Starship is installed!"
+    else
+        echo "Starship is not installed."
+        curl -sS https://starship.rs/install.sh | sh
+        echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+    fi    
   fi
 }
 
@@ -761,6 +766,13 @@ f_linux_config_apps(){
     git config --global user.name "juancra264"
     git config --global user.email "juancra264@hotmail.com"
     git config --global user.username "juancra264"
+
+    # for starship
+    echo "${green}###############################################################################${reset}"
+    echo "${green} Configuring starship${reset}"
+    echo "${green}###############################################################################${reset}"
+	rm -rf $HOME/.config/starship.toml
+	ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
   fi
 }
 
@@ -915,17 +927,6 @@ esac
 echo "${green}###############################################################################${reset}"
 echo "${green} Installing and configuration complete !!!! ${reset}"
 echo "${green}###############################################################################${reset}"
-
-#echo " "
-#echo "${cyan}###############################################################################${reset}"
-#echo "${cyan} Install Oh-my-zsh and power level${reset}"
-#echo "${cyan}###############################################################################${reset}"
-#echo "${cyan} Manual Installation:${reset}"
-#echo 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
-#echo 'git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions'
-#echo 'cp /etc/skel/.zshrc ~/.zshrc'
-#echo 'git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k'
-#echo "echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc"
 
 if [ -f /var/run/reboot-required ]; then
   echo "${red}###############################################################################${reset}"

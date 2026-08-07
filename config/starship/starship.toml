@@ -1,0 +1,44 @@
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+# Define the exact layout of the prompt
+format = """$hostname$directory$git_branch$git_status$character"""
+
+# Hostname
+[hostname]
+ssh_only = false
+format = "[$hostname]($style) "
+style = "bold green"
+
+# Directory module: Show up to 3 parent folders in bold blue
+[directory]
+truncation_length = 3
+truncate_to_repo = false
+style = "bold blue"
+
+# Git branch: Show only when in a repo, in bold purple
+[git_branch]
+style = "bold purple"
+format = "[$symbol$branch]($style) "
+symbol = " "
+
+# Git status: Show basic status indicators
+[git_status]
+format = "([$all_status$ahead_behind]($style) )"
+style = "bold red"
+conflicted = "="
+ahead = ">"
+behind = "<"
+diverged = "<>"
+up_to_date = ""
+untracked = "?"
+stashed = "$"
+modified = "!"
+staged = "+"
+renamed = "R"
+deleted = "X"
+
+# Prompt character: Green arrow for success, red arrow for error
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
