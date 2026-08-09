@@ -45,9 +45,9 @@ if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
     git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 fi
 # Install powerlevel10k
-if [ ! -d "$HOME/powerlevel10k" ]; then
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/powerlevel10k
-fi
+#if [ ! -d "$HOME/powerlevel10k" ]; then
+#  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $HOME/powerlevel10k
+#fi
 if [ ! -d "$HOME/nettools" ]; then
       git clone https://github.com/juancra264/nettools.git $HOME/nettools
     else
@@ -73,4 +73,15 @@ ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
 git config --global user.name "juancra264"
 git config --global user.email "juancra264@hotmail.com"
 git config --global user.username "juancra264"
+
+# Install starship
+pkg install starship
+
+# for starship
+echo "${green}###############################################################################${reset}"
+echo "${green} Configuring starship${reset}"
+echo "${green}###############################################################################${reset}"
+rm -rf $HOME/.config/starship.toml
+ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
+
 
