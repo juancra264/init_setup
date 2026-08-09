@@ -1,13 +1,17 @@
 syntax on
 highlight Comment ctermfg=Cyan
+set number
+set nocompatible
+set colorcolumn=80
+set wildmenu
 set ignorecase
 set smartcase
 set hlsearch
 set incsearch
 set showmatch
 set wrap
-set tabstop=4
-set background=light
+set tabstop=2
+set background=dark
 " Always show statusline
 set laststatus=2
 " Use 256 colours (Use this setting only if your terminal supports 256 colours)
