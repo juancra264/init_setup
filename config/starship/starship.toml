@@ -32,7 +32,7 @@ behind = "<"
 diverged = "<>"
 up_to_date = ""
 untracked = "?"
-stashed = '=$'
+stashed = 'S'
 staged = "+"
 renamed = "R"
 deleted = "X"
