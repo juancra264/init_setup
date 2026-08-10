@@ -16,8 +16,13 @@ reset=$(tput sgr0)
 echo "${green}########################################################${reset}"
 echo "${green} Installing lazyvim${reset}"
 echo "${green}########################################################${reset}"
-#!/usr/bin/env bash
-set -euo pipefail
+
+# Check for LazyVim's signature configuration file
+LAZY_CONFIG="$HOME/.config/nvim/lua/config/lazy.lua"
+if [ -f "$LAZY_CONFIG" ]; then
+  echo "${red}LazyVim is installed in $HOME/.config/nvim${reset}"
+  exit 1
+fi
 
 echo "${green}#==> Updating package lists...${reset}"
 sudo apt update
