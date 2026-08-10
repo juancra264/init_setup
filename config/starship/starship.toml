@@ -32,8 +32,7 @@ behind = "<"
 diverged = "<>"
 up_to_date = ""
 untracked = "?"
-stashed = '[\$${count}](green)'
-modified = "!"
+stashed = '=$'
 staged = "+"
 renamed = "R"
 deleted = "X"
