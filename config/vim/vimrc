@@ -1,6 +1,6 @@
 syntax on
 highlight Comment ctermfg=Cyan
-set number
+"set number
 set nocompatible
 set colorcolumn=80
 set wildmenu
@@ -9,7 +9,7 @@ set smartcase
 set hlsearch
 set incsearch
 set showmatch
-set wrap
+set nowrap
 set tabstop=2
 set background=dark
 " Always show statusline
