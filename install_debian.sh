@@ -13,15 +13,15 @@ reset=$(tput sgr0)
 # #############################################################################
 ## Global Variables
 # #############################################################################
-SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 
 # #############################################################################
 # ## Functions Declarations
 # #############################################################################
 f_linux_upgrade() {
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green} Running a full upgrade${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -34,36 +34,37 @@ f_linux_upgrade() {
 }
 
 f_linux_basic_packages() {
-  echo "${green}###############################################################################${reset}"
-  echo "${green} Installing basic packages (vim, zsh tools, filezilla, ntpsec, etc) ${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
+  echo "${green} Installing basic packages ${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     # Develop tools
     sudo apt install sudo -y
-    sudo apt install git vim neovim tmux python3 python3-pip tlp jq  -y
+    sudo apt install git vim neovim tmux python3 python3-pip tlp jq -y
     # Linux extras
     sudo apt install util-linux-extra gcc make wget bat mosh eza -y
     # ZSH and zsh tools
     sudo apt install zsh zsh-syntax-highlighting zsh-autosuggestions -y
     # Network tools
-    sudo apt install curl net-tools dnsutils traceroute nmap wireshark iperf3 speedtest-cli -y
+    sudo apt install curl net-tools dnsutils traceroute nmap wireshark -y
+    sudo apt install iperf3 speedtest-cli -y
     sudo apt install picocom -y
     # Monitoring tools
     sudo apt install ncdu btop glances bmon htop -y
     # File managers
     sudo apt install filezilla -y
-    # Add current user to dialout group to use the serial interfaces with picocom.
+    # Add User to dialout group to use the serial interfaces with picocom.
     sudo usermod -a -G dialout "$USER"
     # Installing ntpsec client
     sudo apt install ntpsec -y
     sudo systemctl enable ntpsec.service
-    sudo systemctl restart ntpsec.service  
+    sudo systemctl restart ntpsec.service
   fi
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green}  Installing qemu-guest-agent${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -73,10 +74,10 @@ f_linux_basic_packages() {
   fi
 }
 
-f_linux_terminal(){
-  echo "${green}###############################################################################${reset}"
-  echo "${green} Installing Terminal packages ( zsh oh-my-zsh powerline) ${reset}"
-  echo "${green}###############################################################################${reset}"
+f_linux_terminal() {
+  echo "${green}######################################################${reset}"
+  echo "${green} Installing Terminal packages (zsh omz powerline) ${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -94,22 +95,22 @@ f_linux_terminal(){
       sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
     fi
     # Install zsh plugins
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
       git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     fi
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
       git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     fi
     # Install nettools
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     echo "${green} Installing zsh plugins zsh-syntax-highlighting ${reset}"
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     if [ ! -d "$HOME/nettools" ]; then
       git clone https://github.com/juancra264/nettools.git $HOME/nettools
     else
@@ -121,61 +122,61 @@ f_linux_terminal(){
     # Switch the shell.
     chsh -s $(which zsh)
     # Copy zshrc config
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     echo "${green} Configuring zshrc${reset}"
-    echo "${green}###############################################################################${reset}"
+    echo "${green}####################################################${reset}"
     rm -rf $HOME/.zshrc
     cp $HOME/init_setup/config/zshrc/zshrc $HOME/.zshrc
     sudo apt install kitty-terminfo
-    
-    # Install starship 
-    echo "${green}###############################################################################${reset}"
+
+    # Install starship
+    echo "${green}####################################################${reset}"
     echo "${green} Installing starship ${reset}"
-    echo "${green}###############################################################################${reset}"
-    if command -v starship &> /dev/null; then
-        echo "Starship is installed!"
+    echo "${green}####################################################${reset}"
+    if command -v starship &>/dev/null; then
+      echo "Starship is installed!"
     else
-        echo "Starship is not installed."
-        curl -sS https://starship.rs/install.sh | sh
-        echo 'eval "$(starship init zsh)"' >> ~/.zshrc
-    fi    
+      echo "Starship is not installed."
+      curl -sS https://starship.rs/install.sh | sh
+      echo 'eval "$(starship init zsh)"' >>~/.zshrc
+    fi
   fi
 }
 
 f_linux_desktop_packages() {
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green} Installing Remmina ${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt install remmina -y
-    sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y  
+    sudo apt install remmina-plugin-rdp remmina-plugin-secret remmina-plugin-vnc -y
   fi
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green} Installing teams, Code, asana and drawio using snap${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install snapd -y 
+    sudo apt install snapd -y
     sudo snap refresh
-    sudo snap install teams-for-linux   
+    sudo snap install teams-for-linux
     sudo snap install code --classic
     sudo snap install asana-snap
-    sudo snap install drawio 
+    sudo snap install drawio
   fi
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green} Installing Brave${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      sudo curl -fsS https://dl.brave.com/install.sh | sh
+    sudo curl -fsS https://dl.brave.com/install.sh | sh
   fi
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   echo "${green} Installing Virt Manager${reset}"
-  echo "${green}###############################################################################${reset}"
+  echo "${green}######################################################${reset}"
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -188,12 +189,12 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      # Spotify installation on Ubuntu
-      curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
-      echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
-      sudo apt-get update 
-      sudo apt-get install spotify-client -y
-      sudo snap install spotify
+    # Spotify installation on Ubuntu
+    curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+    echo "deb https://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+    sudo apt-get update
+    sudo apt-get install spotify-client -y
+    sudo snap install spotify
   fi
   echo "${green}###############################################################################${reset}"
   echo "${green} Installing yubi authenticator${reset}"
@@ -218,7 +219,7 @@ f_linux_desktop_packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install -y gnome-tweaks gnome-shell-extension-manager   
+    sudo apt install -y gnome-tweaks gnome-shell-extension-manager
     pip3 install --user gnome-extensions-cli --break-system-packages
     gext install clipboard-indicator@tudmotu.com
     gext enable clipboard-indicator@tudmotu.com
@@ -230,7 +231,7 @@ f_linux_desktop_packages() {
     gext enable user-theme@gnome-shell-extensions.gcampax.github.com
     gext install forge@jmmaranan.com
     gext enable forge@jmmaranan.com
-    gext install Vitals@CoreCoding.com   
+    gext install Vitals@CoreCoding.com
     gext enable Vitals@CoreCoding.com
     gnome-extensions list --enabled
   fi
@@ -254,7 +255,7 @@ f_linux_desktop_packages() {
     KEY_PATH="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
     # Add the new keybinding to the list
     gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings \
-    "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+      "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
     # Set the shortcut details for Guake terminal
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH name "Show/Hide Guake"
     gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$KEY_PATH command "guake -t"
@@ -271,7 +272,7 @@ f_linux_desktop_packages() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     gsettings set org.gnome.desktop.background picture-uri ''
     gsettings set org.gnome.desktop.background primary-color '#000000'
-    gsettings set org.gnome.desktop.background color-shading-type 'solid'   
+    gsettings set org.gnome.desktop.background color-shading-type 'solid'
   fi
 }
 
@@ -308,18 +309,18 @@ f_linux_server_packages() {
     if [[ "$ID" == "debian" ]]; then
       curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
       sudo chmod a+r /etc/apt/keyrings/docker.gpg
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null   
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
     elif [[ "$ID" == "ubuntu" ]]; then
       curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
       sudo chmod a+r /etc/apt/keyrings/docker.gpg
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null   
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
     else
       echo "${red}###############################################################################${reset}"
       echo "${red}  THIS IS NO A DEBIAN OR UBUNTU SYSTEM ${reset}"
       echo "${red}###############################################################################${reset}"
     fi
     sudo apt update
-    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin  
+    sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin docker-buildx-plugin
     sudo systemctl enable --now docker
     # Check if dockergroup exists; create if missing
     GROUP_NAME="docker"
@@ -368,7 +369,7 @@ f_linux_Kali_Packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install hcxtools tilix maltego burpsuite -y 
+    sudo apt install hcxtools tilix maltego burpsuite -y
     sudo apt install hydra beef-xss nikto wavemon -y
   fi
   echo "${green}###############################################################################${reset}"
@@ -378,7 +379,7 @@ f_linux_Kali_Packages() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
-    sudo apt install bully hashcat hcxdumptool hcxtools macchanger -y 
+    sudo apt install bully hashcat hcxdumptool hcxtools macchanger -y
     sudo apt install aircrack-ng -y
     sudo apt install wifite -y
   fi
@@ -408,7 +409,7 @@ f_linux_Kali_Packages() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    sudo apt install blueman -y 
+    sudo apt install blueman -y
     sudo systemctl enable bluetooth.service
     sudo systemctl start bluetooth.service
   fi
@@ -428,12 +429,12 @@ f_linux_Kali_Packages() {
     echo "${green} Installing dependencies for kismet${reset}"
     echo "${green}###############################################################################${reset}"
     sudo apt install build-essential libwebsockets-dev pkg-config zlib1g-dev -y
-    sudo apt install libnl-3-dev libnl-genl-3-dev libcap-dev libpcap-dev libnm-dev -y 
-    sudo apt install libdw-dev libsqlite3-dev libprotobuf-dev libprotobuf-c-dev -y 
-    sudo apt install protobuf-compiler protobuf-c-compiler -y 
+    sudo apt install libnl-3-dev libnl-genl-3-dev libcap-dev libpcap-dev libnm-dev -y
+    sudo apt install libdw-dev libsqlite3-dev libprotobuf-dev libprotobuf-c-dev -y
+    sudo apt install protobuf-compiler protobuf-c-compiler -y
     sudo apt install libusb-1.0-0-dev -y
     sudo apt install python3 python3-setuptools python3-protobuf python3-requests -y
-    sudo apt install python3-numpy python3-serial python3-usb python3-dev python3-paho-mqtt -y 
+    sudo apt install python3-numpy python3-serial python3-usb python3-dev python3-paho-mqtt -y
     sudo apt install python3-websockets libubertooth-dev libbtbb-dev -y
 
     echo "${green}###############################################################################${reset}"
@@ -455,15 +456,15 @@ f_linux_Kali_Packages() {
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     sudo apt update
-    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > $HOME/msfinstall
+    curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb >$HOME/msfinstall
     chmod +x $HOME/msfinstall
     sudo bash $HOME/msfinstall
     echo "${red}###############################################################################${reset}"
     echo "${red} Start Metasploit console > msfconsole ${reset}"
     echo "${red} Verify database connection > db_status ${reset}"
     echo "${red} Update Metasploit > msfupdate ${reset}"
-    echo "${red}###############################################################################${reset}" 
-  fi  
+    echo "${red}###############################################################################${reset}"
+  fi
 }
 
 f_linux_nx() {
@@ -473,7 +474,7 @@ f_linux_nx() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-  	wget -P $HOME https://web9001.nomachine.com/download/9.6/Linux/nomachine_9.6.3_1_amd64.deb  
+    wget -P $HOME https://web9001.nomachine.com/download/9.6/Linux/nomachine_9.6.3_1_amd64.deb
     sudo dpkg -i $HOME/nomachine_9.6.3_1_amd64.deb
     rm -rf $HOME/nomachine_9.6.3_1_amd64.deb
   fi
@@ -492,35 +493,35 @@ f_linux_arduinoIDEv2() {
     APP_DIR="$HOME/Applications"
     DESKTOP_DIR="$HOME/.local/share/applications"
     mkdir -p "$BIN_DIR" "$APP_DIR" "$DESKTOP_DIR"
-    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh \
-      | BINDIR="${BIN_DIR}" sh
+    curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh |
+      BINDIR="${BIN_DIR}" sh
     if ! echo "${PATH}" | grep -q "${BIN_DIR}"; then
       SHELL_RC="${HOME}/.bashrc"
       [[ -n "${ZSH_VERSION:-}" ]] && SHELL_RC="${HOME}/.zshrc"
       if ! grep -qs "${BIN_DIR}" "${SHELL_RC}"; then
-        echo "export PATH=\"${BIN_DIR}:\$PATH\"" >> "${SHELL_RC}"
+        echo "export PATH=\"${BIN_DIR}:\$PATH\"" >>"${SHELL_RC}"
         echo "Added ${BIN_DIR} to PATH in ${SHELL_RC} (restart your shell or 'source' it)."
       fi
       export PATH="${BIN_DIR}:${PATH}"
     fi
     arduino-cli config init --overwrite
     arduino-cli core update-index
-  
-    LATEST_APPIMAGE_URL=$(curl -s https://api.github.com/repos/arduino/arduino-ide/releases/latest | \
+
+    LATEST_APPIMAGE_URL=$(curl -s https://api.github.com/repos/arduino/arduino-ide/releases/latest |
       jq -r '.assets[] | select(.name | test("Linux_64bit.AppImage$")) | .browser_download_url')
-    
+
     APPIMAGE_PATH="$APP_DIR/arduino-ide.AppImage"
-    
+
     echo "==> Downloading Arduino IDE v2..."
     curl -fsSL -o "$APPIMAGE_PATH" "$LATEST_APPIMAGE_URL"
     chmod +x "$APPIMAGE_PATH"
-    
+
     # Create a symlink in ~/.local/bin for terminal execution
     ln -sf "$APPIMAGE_PATH" "$BIN_DIR/arduino-ide"
-    
+
     # 4. Create Desktop Launcher (.desktop file)
     echo "==> Creating Desktop Entry..."
-    cat <<EOF > "$DESKTOP_DIR/arduino-ide.desktop"
+    cat <<EOF >"$DESKTOP_DIR/arduino-ide.desktop"
 [Desktop Entry]
 Type=Application
 Name=Arduino IDE 2
@@ -551,6 +552,16 @@ f_linux_kernel7() {
   fi
 }
 
+f_linux_herdr() {
+  echo "${green}###############################################################################${reset}"
+  echo "${green} Installing Linux herdr${reset}"
+  echo "${green}###############################################################################${reset}"
+  read -r -p "Continue? [y/N]" -n 1
+  echo # (optional) move to a new line
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    curl -fsSL https://herdr.dev/install.sh | sh
+  fi
+}
 
 f_linux_antigravity() {
   echo "${green}###############################################################################${reset}"
@@ -563,8 +574,8 @@ f_linux_antigravity() {
     # 1. Clean up legacy 1.x installations to avoid redirect loops
     echo -e "${green}[1/5] Checking and cleaning up legacy 1.x installations...${NC}"
     if dpkg -l | grep -q "^ii  antigravity "; then
-        echo "Found legacy antigravity apt package. Purging to prevent conflict loops..."
-        sudo apt purge -y antigravity
+      echo "Found legacy antigravity apt package. Purging to prevent conflict loops..."
+      sudo apt purge -y antigravity
     fi
     sudo rm -f /usr/share/applications/antigravity.desktop
     sudo rm -f /etc/apt/sources.list.d/antigravity.list
@@ -573,16 +584,16 @@ f_linux_antigravity() {
     DEPS=(curl wget tar xdg-utils desktop-file-utils)
     MISSING_DEPS=()
     for dep in "${DEPS[@]}"; do
-        if ! command -v "$dep" &> /dev/null; then
-            MISSING_DEPS+=("$dep")
-        fi
+      if ! command -v "$dep" &>/dev/null; then
+        MISSING_DEPS+=("$dep")
+      fi
     done
     if [ ${#MISSING_DEPS[@]} -ne 0 ]; then
-        echo "Installing missing dependencies: ${MISSING_DEPS[*]}"
-        sudo apt update
-        sudo apt install -y "${MISSING_DEPS[@]}"
+      echo "Installing missing dependencies: ${MISSING_DEPS[*]}"
+      sudo apt update
+      sudo apt install -y "${MISSING_DEPS[@]}"
     else
-        echo "All basic dependencies met."
+      echo "All basic dependencies met."
     fi
     # Install common system library dependencies needed by Electron runtimes
     echo "Installing common libraries required by Electron..."
@@ -597,35 +608,35 @@ f_linux_antigravity() {
     # Detect architecture
     ARCH=$(uname -m)
     if [ "$ARCH" = "x86_64" ]; then
-        DOWNLOAD_URL="https://antigravity.google/download/linux/x64/antigravity-desktop-latest.tar.gz"
+      DOWNLOAD_URL="https://antigravity.google/download/linux/x64/antigravity-desktop-latest.tar.gz"
     elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-        DOWNLOAD_URL="https://antigravity.google/download/linux/arm64/antigravity-desktop-latest.tar.gz"
+      DOWNLOAD_URL="https://antigravity.google/download/linux/arm64/antigravity-desktop-latest.tar.gz"
     else
-        echo -e "${RED}Unsupported architecture: $ARCH${NC}"
-        exit 1
+      echo -e "${RED}Unsupported architecture: $ARCH${NC}"
+      exit 1
     fi
     echo "Downloading from $DOWNLOAD_URL..."
     TMP_TAR=$(mktemp /tmp/antigravity-XXXXXX.tar.gz)
     if wget -O "$TMP_TAR" "$DOWNLOAD_URL"; then
-        echo "Extracting to $INSTALL_DIR..."
-        tar -xzf "$TMP_TAR" -C "$INSTALL_DIR" --strip-components=1
-        rm -f "$TMP_TAR"
+      echo "Extracting to $INSTALL_DIR..."
+      tar -xzf "$TMP_TAR" -C "$INSTALL_DIR" --strip-components=1
+      rm -f "$TMP_TAR"
     else
-        echo -e "${RED}Failed to download the desktop package. Please ensure the link is reachable.${NC}"
-        rm -f "$TMP_TAR"
-        exit 1
+      echo -e "${RED}Failed to download the desktop package. Please ensure the link is reachable.${NC}"
+      rm -f "$TMP_TAR"
+      exit 1
     fi
     # Make binaries executable
     chmod +x "$INSTALL_DIR/antigravity"
     if [ -f "$INSTALL_DIR/chrome-sandbox" ]; then
-        chmod +x "$INSTALL_DIR/chrome-sandbox"
+      chmod +x "$INSTALL_DIR/chrome-sandbox"
     fi
     # 5. Create Desktop Launcher (LXQt Integration)
     echo -e "${green}[5/5] Creating Desktop Launcher...${NC}"
-    
+
     LAUNCHER_PATH="$HOME/.local/share/applications/google-antigravity.desktop"
     # By default, we launch with --no-sandbox to handle Ubuntu 24.04/26.04 user namespace restrictions.
-cat <<EOF > "$LAUNCHER_PATH"
+    cat <<EOF >"$LAUNCHER_PATH"
 [Desktop Entry]
 Name=Google Antigravity
 Comment=Agentic Development Platform
@@ -639,12 +650,12 @@ EOF
     # Find dynamic icon fallback if the default assets folder differs
     ICON_FIND=$(find "$INSTALL_DIR" -name "*.png" -o -name "*.svg" | head -n 1)
     if [ -n "$ICON_FIND" ]; then
-        sed -i "s|Icon=.*|Icon=$ICON_FIND|" "$LAUNCHER_PATH"
+      sed -i "s|Icon=.*|Icon=$ICON_FIND|" "$LAUNCHER_PATH"
     fi
-    
+
     chmod +x "$LAUNCHER_PATH"
     update-desktop-database "$HOME/.local/share/applications"
-    
+
     echo -e "${GREEN}=== Installation Completed Successfully! ===${NC}"
     echo -e "You can launch Google Antigravity from the Lubuntu Application Menu (under Development)."
     echo -e "Or run it from the terminal using:"
@@ -673,7 +684,7 @@ f_linux_vscode() {
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     #sudo apt install software-properties-common apt-transport-https wget -y
     sudo apt install apt-transport-https wget -y
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg 
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
     sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
     sudo sh -c 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
     sudo apt update
@@ -701,9 +712,9 @@ f_linux_vpns() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg   
+    wget -O - https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/DEB-GPG-KEY | gpg --dearmor | sudo tee /usr/share/keyrings/repo.fortinet.com.gpg
     echo "deb [arch=amd64 signed-by=/usr/share/keyrings/repo.fortinet.com.gpg] https://repo.fortinet.com/repo/forticlient/7.4/ubuntu22/ stable non-free" | sudo tee /etc/apt/sources.list.d/repo.fortinet.com.list
-    sudo apt update   
+    sudo apt update
     sudo apt install forticlient -y
   fi
   echo "${green}###############################################################################${reset}"
@@ -720,7 +731,7 @@ f_linux_vpns() {
   fi
 }
 
-f_linux_config_apps(){
+f_linux_config_apps() {
   echo "${green}###############################################################################${reset}"
   echo "${green} Copying Configuration Files (vim, tmux, kitty, git)${reset}"
   echo "${green}###############################################################################${reset}"
@@ -771,8 +782,8 @@ f_linux_config_apps(){
     echo "${green}###############################################################################${reset}"
     echo "${green} Configuring starship${reset}"
     echo "${green}###############################################################################${reset}"
-	rm -rf $HOME/.config/starship.toml
-	ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
+    rm -rf $HOME/.config/starship.toml
+    ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
   fi
 }
 
@@ -787,7 +798,7 @@ f_linux_install_app() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    f_linux_desktop_packages  
+    f_linux_desktop_packages
   fi
   echo "${green}###############################################################################${reset}"
   echo "${green} Installing Server Packages${reset}"
@@ -795,7 +806,7 @@ f_linux_install_app() {
   read -r -p "Continue? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-    f_linux_server_packages  
+    f_linux_server_packages
   fi
   echo "${green}###############################################################################${reset}"
   echo "${green} Installing VPNs clients${reset}"
@@ -811,11 +822,11 @@ f_linux_install_app() {
   ##f_linux_antigravity
   f_linux_arduinoIDEv2
   f_linux_kernel7
+  f_linux_herdr
 
   # adjust the timezone to chicago
-  sudo timedatectl set-timezone America/Chicago 
+  sudo timedatectl set-timezone America/Chicago
 }
-
 
 # #############################################################################
 # error codes
@@ -833,95 +844,95 @@ set -e
 # #############################################################################
 OS="$(uname)"
 case $OS in
-  Linux)
-    OS='linux'
-    ;;
-  FreeBSD)
-    OS='freebsd'
-    ;;
-  NetBSD)
-    OS='netbsd'
-    ;;
-  OpenBSD)
-    OS='openbsd'
-    ;;
-  Darwin)
-    OS='osx'
-    ;;
-  SunOS)
-    OS='solaris'
-    echo 'OS not supported'
-    exit 2
-    ;;
-  *)
-    echo 'OS not supported'
-    exit 2
-    ;;
+Linux)
+  OS='linux'
+  ;;
+FreeBSD)
+  OS='freebsd'
+  ;;
+NetBSD)
+  OS='netbsd'
+  ;;
+OpenBSD)
+  OS='openbsd'
+  ;;
+Darwin)
+  OS='osx'
+  ;;
+SunOS)
+  OS='solaris'
+  echo 'OS not supported'
+  exit 2
+  ;;
+*)
+  echo 'OS not supported'
+  exit 2
+  ;;
 esac
 
 OS_type="$(uname -m)"
 case "$OS_type" in
-  x86_64|amd64)
-    OS_type='amd64'
-    ;;
-  i?86|x86)
-    OS_type='386'
-    ;;
-  aarch64|arm64)
-    OS_type='arm64'
-    ;;
-  armv7*)
-    OS_type='arm-v7'
-    ;;
-  armv6*)
-    OS_type='arm-v6'
-    ;;
-  arm*)
-    OS_type='arm'
-    ;;
-  *)
-    echo 'OS type not supported'
-    exit 2
-    ;;
+x86_64 | amd64)
+  OS_type='amd64'
+  ;;
+i?86 | x86)
+  OS_type='386'
+  ;;
+aarch64 | arm64)
+  OS_type='arm64'
+  ;;
+armv7*)
+  OS_type='arm-v7'
+  ;;
+armv6*)
+  OS_type='arm-v6'
+  ;;
+arm*)
+  OS_type='arm'
+  ;;
+*)
+  echo 'OS type not supported'
+  exit 2
+  ;;
 esac
 
 # #############################################################################
-# Commands based on platform 
+# Commands based on platform
 # #############################################################################
 case "$OS" in
-  'linux')
-    #For Linux Systems
-    f_linux_install_app
-    ;;
-  'freebsd'|'openbsd'|'netbsd')
-    #For bsd Systems
-    echo " This is a bsd"
-    ;;
-  'osx')
-    #For MacOS systems
-    echo " This is a MacOS: "
-    echo "Setting up your Mac..."
+'linux')
+  #For Linux Systems
+  f_linux_install_app
+  ;;
+'freebsd' | 'openbsd' | 'netbsd')
+  #For bsd Systems
+  echo " This is a bsd"
+  ;;
+'osx')
+  #For MacOS systems
+  echo " This is a MacOS: "
+  echo "Setting up your Mac..."
 
-    # Removes .zshrc from $HOME (if it exists) and symlinks the .zshrc file from the .dotfiles
-    #rm -rf $HOME/.zshrc
-    #ln -s $HOME/dotfiles/zshrc/.zshrc $HOME/.zshrc
+  # Removes .zshrc from $HOME (if it exists) and symlinks the .zshrc file from the .dotfiles
+  #rm -rf $HOME/.zshrc
+  #ln -s $HOME/dotfiles/zshrc/.zshrc $HOME/.zshrc
 
-    # Update Homebrew recipes
-    brew update
+  # Update Homebrew recipes
+  brew update
 
-    # Install all our dependencies with bundle (See Brewfile)
-    brew tap homebrew/bundle
-    brew bundle --file $HOME/dotfiles/brew/Brewfile
+  # Install all our dependencies with bundle (See Brewfile)
+  brew tap homebrew/bundle
+  brew bundle --file $HOME/dotfiles/brew/Brewfile
 
-    # for kitty config
-    #rm -rf $HOME/.config/kitty/kitty.conf
-    #mkdir -p $HOME/.config/kitty
-    #ln -s $HOME/dotfiles/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
-    ;;
-  *)
-    echo 'OS not supported'
-    exit 2
-    ;;
+  # for kitty config
+  #rm -rf $HOME/.config/kitty/kitty.conf
+  #mkdir -p $HOME/.config/kitty
+  #ln -s $HOME/dotfiles/kitty/kitty.conf $HOME/.config/kitty/kitty.conf
+  ;;
+*)
+  echo 'OS not supported'
+  exit 2
+  ;;
 esac
 
 echo "${green}###############################################################################${reset}"
@@ -935,7 +946,7 @@ if [ -f /var/run/reboot-required ]; then
   read -r -p "Want to reboot the system? [y/N]" -n 1
   echo # (optional) move to a new line
   if [[ "$REPLY" =~ ^[Yy]$ ]]; then
-      sudo reboot
+    sudo reboot
   fi
 fi
 
