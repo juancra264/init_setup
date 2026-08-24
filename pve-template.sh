@@ -9,8 +9,8 @@ set -euo pipefail
 
 # Ensure script is run as root
 if [[ $EUID -ne 0 ]]; then
-   echo "[-] This script must be run as root (or via sudo)." >&2
-   exit 1
+  echo "[-] This script must be run as root (or via sudo)." >&2
+  exit 1
 fi
 
 echo "[+] Updating system packages..."
@@ -19,7 +19,7 @@ apt update -y
 apt dist-upgrade -y
 
 echo "[+] Installing essential packages (qemu-guest-agent, cloud-init)..."
-apt install -y qemu-guest-agent cloud-init cloud-utils cloud-initramfs-growpart
+apt install -y qemu-guest-agent cloud-init cloud-utils
 systemctl enable qemu-guest-agent
 
 echo "[+] Cleaning apt cache and package lists..."
@@ -39,7 +39,7 @@ rm -f /etc/ssh/ssh_host_*
 
 # Optional: ensure SSH host keys regenerate on boot if cloud-init is not used
 if ! grep -q "ssh-keygen -A" /etc/rc.local 2>/dev/null; then
-  cat << 'EOF' > /etc/systemd/system/regenerate-ssh-host-keys.service
+  cat <<'EOF' >/etc/systemd/system/regenerate-ssh-host-keys.service
 [Unit]
 Description=Regenerate SSH host keys if missing
 ConditionPathExistsGlob=!/etc/ssh/ssh_host_*_key
@@ -58,8 +58,8 @@ EOF
 fi
 
 echo "[+] Cleaning cloud-init state (if installed)..."
-if command -v cloud-init &> /dev/null; then
-    cloud-init clean --logs --seed || true
+if command -v cloud-init &>/dev/null; then
+  cloud-init clean --logs --seed || true
 fi
 
 echo "[+] Clearing persistent network device rules and DHCP leases..."
@@ -80,4 +80,3 @@ sync
 
 echo "[✓] Generalization complete. Shutting down system now..."
 shutdown -h now
-
