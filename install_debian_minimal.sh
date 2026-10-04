@@ -36,7 +36,7 @@ sudo apt install -y \
 
 sudo systemctl enable --now qemu-guest-agent
 sudo systemctl enable ssh
-sudo systemctl enable cloud-init-local.service cloud-init.service cloud-config.service cloud-final.service
+#sudo systemctl enable cloud-init-local.service cloud-init.service cloud-config.service cloud-final.service
 
 sudo apt clean
 sudo journalctl --rotate
