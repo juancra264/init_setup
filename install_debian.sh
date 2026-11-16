@@ -33,6 +33,27 @@ f_linux_upgrade() {
   fi
 }
 
+f_sshkeys() {
+  if [ -f "$KEY_PATH" ]; then
+    echo "${green}✓ SSH key already exists${reset}"
+  else
+    echo "${red}✗ Generating Ed25519 key${reset}"
+    ssh-keygen -t ed25519 -N "" -f "$KEY_PATH" -C "automated_deploy"
+    ssh-keygen -t ed25519 -a 100 -N "" -f $HOME/.ssh/juan_key -C "juancra264@gmail.com"
+    chmod 700 $HOME/.ssh
+    chmod 600 $HOME/.ssh/juan_key
+    chmod 644 $HOME/.ssh/juan_key.pub
+    eval "$(ssh-agent -s)"
+    ssh-add $HOME/.ssh/juan_key
+    cat <<'EOF' >>$HOME/.ssh/config
+Host *
+    HostkeyAlgorithms +ssh-rsa
+    KexAlgorithms +diffie-hellman-group14-sha1
+    IdentityFile ~/.ssh/juan_key
+EOF
+  fi
+}
+
 f_linux_basic_packages() {
   echo "${green}######################################################${reset}"
   echo "${green} Installing basic packages ${reset}"
@@ -790,6 +811,7 @@ f_linux_config_apps() {
 f_linux_install_app() {
   # General Linux installation server and desktop
   f_linux_upgrade
+  f_sshkeys
   f_linux_basic_packages
   f_linux_terminal
   echo "${green}###############################################################################${reset}"
