@@ -38,6 +38,18 @@ sudo apt install -y \
   cloud-init
 
 echo "${green}##################################################################${reset}"
+echo "${green} Creating user jcramirez and granting sudo${reset}"
+echo "${green}##################################################################${reset}"
+if id "jcramirez" &>/dev/null; then
+  echo "User jcramirez already exists. Skipping creation."
+else
+  useradd -m -s /bin/bash jcramirez
+  echo "User jcramirez created."
+fi
+usermod -aG sudo jcramirez
+echo "User jcramirez added to sudo group."
+
+echo "${green}##################################################################${reset}"
 echo "${green} enabling ssh and qemu${reset}"
 echo "${green}##################################################################${reset}"
 sudo systemctl enable --now qemu-guest-agent
@@ -51,19 +63,19 @@ sudo apt clean
 sudo journalctl --rotate
 sudo journalctl --vacuum-time=1s
 
-echo "${green}##################################################################${reset}"
-echo "${green} removing bash history${reset}"
-echo "${green}##################################################################${reset}"
-history -c
-rm -f ~/.bash_history
-sudo rm -f /root/.bash_history
+#echo "${green}##################################################################${reset}"
+#echo "${green} removing bash history${reset}"
+#echo "${green}##################################################################${reset}"
+#history -c
+#rm -f ~/.bash_history
+#sudo rm -f /root/.bash_history
 
-echo "${green}##################################################################${reset}"
-echo "${green} removing machine-id${reset}"
-echo "${green}##################################################################${reset}"
-sudo truncate -s 0 /etc/machine-id
-sudo rm -f /var/lib/dbus/machine-id
-sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
+#echo "${green}##################################################################${reset}"
+#echo "${green} removing machine-id${reset}"
+#echo "${green}##################################################################${reset}"
+#sudo truncate -s 0 /etc/machine-id
+#sudo rm -f /var/lib/dbus/machine-id
+#sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 
 echo "${green}##################################################################${reset}"
 echo "${green} removing ssh host keys${reset}"
