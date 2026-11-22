@@ -35,7 +35,17 @@ sudo apt install -y \
   net-tools \
   dnsutils \
   ca-certificates \
-  cloud-init
+  cloud-init \
+  locales
+
+echo "${green}##################################################################${reset}"
+echo "${green} Configuring locale to en_US.UTF-8${reset}"
+echo "${green}##################################################################${reset}"
+sed -i '/en_US.UTF-8 UTF-8/s/^# //g' /etc/locale.gen
+locale-gen en_US.UTF-8
+update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+echo "LANG=en_US.UTF-8" > /etc/default/locale
+echo "${green}Locale set to en_US.UTF-8.${reset}"
 
 echo "${green}##################################################################${reset}"
 echo "${green} Creating user jcramirez and granting sudo${reset}"
