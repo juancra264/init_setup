@@ -174,7 +174,7 @@ echo "${green}####################################################${reset}"
 echo "${green} Configuring zshrc${reset}"
 echo "${green}####################################################${reset}"
 rm -rf $HOME/.zshrc
-cp $HOME/fedora_atomic/config/zshrc/zshrc $HOME/.zshrc
+cp $HOME/init_setup/config/zshrc_fedora/zshrc $HOME/.zshrc
 
 # Install starship
 echo "${green}####################################################${reset}"
@@ -193,7 +193,7 @@ echo "${green}##################################################################
 echo "${green} Configuring Git${reset}"
 echo "${green}###############################################################################${reset}"
 rm -rf $HOME/.gitconfig
-ln -s $HOME/fedora_atomic/config/git/gitconfig $HOME/.gitconfig
+ln -s $HOME/init_setup/config/git/gitconfig $HOME/.gitconfig
 git config --global user.name "juancra264"
 git config --global user.email "juancra264@gmail.com"
 git config --global user.username "juancra264"
@@ -203,7 +203,7 @@ echo "${green}##################################################################
 echo "${green} Configuring starship${reset}"
 echo "${green}###############################################################################${reset}"
 rm -rf $HOME/.config/starship.toml
-ln -s $HOME/fedora_atomic/config/starship/starship.toml $HOME/.config/starship.toml
+ln -s $HOME/init_setup/config/starship/starship.toml $HOME/.config/starship.toml
 
 # configuring foot
 mkdir -p ~/.config/foot
@@ -215,13 +215,13 @@ echo "${green} Configuring Alacritty${reset}"
 echo "${green}###############################################################################${reset}"
 rm -rf $HOME/.config/alacritty/alacritty.toml
 mkdir -p $HOME/.config/alacritty/
-ln -s $HOME/fedora_atomic/config/alacritty/alacritty.toml $HOME/.config/alacritty/alacritty.toml
+ln -s $HOME/init_setup/config/alacritty/alacritty.toml $HOME/.config/alacritty/alacritty.toml
 
 echo "${green}###############################################################################${reset}"
 echo "${green} Configuring VIM${reset}"
 echo "${green}###############################################################################${reset}"
 rm -rf $HOME/.vimrc
-ln -s $HOME/fedora_atomic/config/vim/vimrc $HOME/.vimrc
+ln -s $HOME/init_setup/config/vim/vimrc $HOME/.vimrc
 
 echo "${green}######################################################${reset}"
 echo "${green} Installing LazzyVim${reset}"
