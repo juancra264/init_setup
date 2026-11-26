@@ -29,6 +29,7 @@ sudo apt install -y \
   vim \
   nano \
   htop \
+  mtr \
   qemu-guest-agent \
   openssh-server \
   bash-completion \
@@ -44,7 +45,7 @@ echo "${green}##################################################################
 sed -i '/en_US.UTF-8 UTF-8/s/^# //g' /etc/locale.gen
 locale-gen en_US.UTF-8
 update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
-echo "LANG=en_US.UTF-8" > /etc/default/locale
+echo "LANG=en_US.UTF-8" >/etc/default/locale
 echo "${green}Locale set to en_US.UTF-8.${reset}"
 
 echo "${green}##################################################################${reset}"
@@ -63,15 +64,16 @@ echo "${green}##################################################################
 echo "${green} enabling ssh and qemu${reset}"
 echo "${green}##################################################################${reset}"
 sudo systemctl enable --now qemu-guest-agent
-sudo systemctl enable ssh
+sudo systemctl enable ssh.service
+sudo systemctl start ssh.service
 #sudo systemctl enable cloud-init-local.service cloud-init.service cloud-config.service cloud-final.service
 
-echo "${green}##################################################################${reset}"
-echo "${green} doing cleaning apt and journalctl${reset}"
-echo "${green}##################################################################${reset}"
-sudo apt clean
-sudo journalctl --rotate
-sudo journalctl --vacuum-time=1s
+# echo "${green}##################################################################${reset}"
+# echo "${green} doing cleaning apt and journalctl${reset}"
+# echo "${green}##################################################################${reset}"
+# sudo apt clean
+# sudo journalctl --rotate
+# sudo journalctl --vacuum-time=1s
 
 #echo "${green}##################################################################${reset}"
 #echo "${green} removing bash history${reset}"
@@ -87,7 +89,13 @@ sudo journalctl --vacuum-time=1s
 #sudo rm -f /var/lib/dbus/machine-id
 #sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 
-echo "${green}##################################################################${reset}"
-echo "${green} removing ssh host keys${reset}"
-echo "${green}##################################################################${reset}"
+# echo "${green}##################################################################${reset}"
+# echo "${green} removing ssh host keys${reset}"
+# echo "${green}##################################################################${reset}"
 #sudo rm -f /etc/ssh/ssh_host_*
+
+# adjust the timezone to chicago
+echo "${green}##################################################################${reset}"
+echo "${green} Set time zone to chicago time${reset}"
+echo "${green}##################################################################${reset}"
+sudo timedatectl set-timezone America/Chicago

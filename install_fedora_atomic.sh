@@ -71,7 +71,6 @@ if ! command -v rg &>/dev/null; then MISSING_PKGS+=("ripgrep"); fi
 if ! command -v fd &>/dev/null; then MISSING_PKGS+=("fd-find"); fi
 if ! command -v ncdu &>/dev/null; then MISSING_PKGS+=("ncdu"); fi
 if ! command -v foot &>/dev/null; then MISSING_PKGS+=("foot"); fi
-if ! command -v zoxide &>/dev/null; then MISSING_PKGS+=("zoxide"); fi
 if ! &>/dev/null; then MISSING_PKGS+=("ncdu"); fi
 if ! command -v ncdu &>/dev/null; then MISSING_PKGS+=("ncdu"); fi
 
@@ -87,7 +86,7 @@ else
   echo "${green}✓ rpm-ostree prerequisites installed${reset}"
 fi
 
-# Installing Cliamp
+# Installing Cliamp (Music streaming)
 curl -fsSL https://cliamp.stream/install.sh | sh
 
 #Install zsh-syntax-highlighting
