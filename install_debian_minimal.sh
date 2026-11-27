@@ -99,3 +99,6 @@ echo "${green}##################################################################
 echo "${green} Set time zone to chicago time${reset}"
 echo "${green}##################################################################${reset}"
 sudo timedatectl set-timezone America/Chicago
+echo "${red}##################################################################${reset}"
+echo "${red}Minimal config done${reset}"
+echo "${red}##################################################################${reset}"
